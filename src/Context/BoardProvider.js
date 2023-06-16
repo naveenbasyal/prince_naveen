@@ -8,10 +8,10 @@ const BoardProvider = ({ children }) => {
   const [newBoardColor, setNewBoardColor] = useState("#ddd");
   const [showOverlay, setShowOverlay] = useState(false);
   const [colors, setColors] = useState([
-    "#A7F0F9",
-    "#C5C5FC",
-    "#FFAEC0",
-    "#FFCC66",
+    "#d2faff",
+    "#dbdbff",
+    "#ffc9d5",
+    "#ffe3ac",
   ]);
   
   const [selectedBoardIndex, setSelectedBoardIndex] = useState(null);

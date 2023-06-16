@@ -8,14 +8,30 @@
   --grey_color: #717171;
   --red_color: #d33852;
 }
-.pointer{
+.pointer {
   cursor: pointer;
 }
-.center{
+.center {
   display: grid;
   place-items: center;
 }
 
-.grey{
+.grey {
   color: var(--grey_color);
+}
+.u-f-b {
+  padding: 10px 10px;
+  width: 11rem;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: var(--grey_color);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.u-f-b input {
+  display: none;
 }

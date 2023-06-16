@@ -46,8 +46,8 @@ const Board = () => {
     setNewBoardColor("black");
   };
 
-  const handleEllipsisClick = (e,index) => {
-    e.stopPropagation();// Prevent event propagation for the parent div (board)
+  const handleEllipsisClick = (e, index) => {
+    e.stopPropagation(); // Prevent event propagation for the parent div (board)
     if (selectedBoardIndex === index) {
       setSelectedBoardIndex(null);
     } else {
@@ -72,7 +72,6 @@ const Board = () => {
     navigate(`/board/${boardId}`);
   };
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       const optionsModel = document.querySelector(".options__model");
@@ -82,7 +81,7 @@ const Board = () => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-console.log(boards)
+    console.log(boards);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -115,7 +114,7 @@ console.log(boards)
               <div className="options position-absolute center">
                 <i
                   className="fa-solid fa-ellipsis-v pointer dot"
-                  onClick={(e) => handleEllipsisClick(e,id)}
+                  onClick={(e) => handleEllipsisClick(e, id)}
                 ></i>
                 {selectedBoardIndex === id && (
                   <div className="options__model">
