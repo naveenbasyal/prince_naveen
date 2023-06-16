@@ -49,7 +49,8 @@ const Board = () => {
     navigate(`/board/${newBoard.id}`);
   };
 
-  const handleEllipsisClick = (index) => {
+  const handleEllipsisClick = (e,index) => {
+    e.stopPropagation();// Prevent event propagation for the parent div (board)
     if (selectedBoardIndex === index) {
       setSelectedBoardIndex(null);
     } else {
@@ -116,7 +117,7 @@ console.log(boards)
               <div className="options position-absolute center">
                 <i
                   className="fa-solid fa-ellipsis-v pointer dot"
-                  onClick={() => handleEllipsisClick(id)}
+                  onClick={(e) => handleEllipsisClick(e,id)}
                 ></i>
                 {selectedBoardIndex === id && (
                   <div className="options__model">
