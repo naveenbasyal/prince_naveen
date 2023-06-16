@@ -18,7 +18,9 @@ const Posts = () => {
   });
   const inputRef = useRef(null);
   const navigate = useNavigate();
+
   const selectedBoard = boards.find((board) => board.id === boardId);
+
   if (!selectedBoard) {
     navigate("/")
     return;
@@ -98,10 +100,10 @@ const Posts = () => {
       <div className="post_nav">
         {console.log("--->", post)}
         <div className="post_nav_left">
-  <Link to="/">
-            <i className="fa-solid fa-arrow-left grey"></i>
+          <Link to="/create">
+            <i className="fa-solid fa-arrow-left grey"
+            ></i>
           </Link>
-
 
           <div className="post_nav_left_img center">
             <img

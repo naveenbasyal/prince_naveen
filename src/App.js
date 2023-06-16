@@ -10,7 +10,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route
-            path="/"
+            path="/create"
             element={
               <BoardProvider>
                 <Board />

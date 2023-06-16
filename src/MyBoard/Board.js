@@ -51,6 +51,7 @@ const Board = () => {
     setShowOverlay(false);
     setNewBoardName("");
     setNewBoardColor("black");
+
   };
 
   const handleEllipsisClick = (e, index) => {
@@ -126,6 +127,7 @@ const Board = () => {
             <div
               key={id}
               className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
+              // onClick={()=>handleBoardClick(id)}
             >
               <div
                 className="board__color "
