@@ -2,19 +2,29 @@ import React, { useContext } from "react";
 import { BoardContext } from "../Context/BoardProvider";
 
 const Overlay = () => {
-  const { showOverlay } = useContext(BoardContext);
+  const { setBoardName,setPostColor ,setShowOverlay} = useContext(BoardContext);
   return (
     <div className="overlay">
-      <div className="overlay__content">
-        <h1 className="overlay__title">Create a new board</h1>
+      <div className="overlay_content">
+        <h3>Add a name for your board</h3>
         <input
-          className="overlay__input"
           type="text"
-          placeholder="Add board title"
+          value={boardName}
+          onChange={(e) => setBoardName(e.target.value)}
+          placeholder="Enter board name"
         />
-        {showOverlay && console.log("showOverlay")}
-        <button className="overlay__button">Create</button>
-        <button className="overlay__button">Cancel</button>
+        <select
+          value={postColor}
+          onChange={(e) => setPostColor(e.target.value)}
+          placeholder="Select post color"
+        >
+          <option value="">Select color</option>
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+          <option value="green">Green</option>
+        </select>
+        <button onClick={""}>Create</button>
+        <button onClick={() => setShowOverlay(false)}>Cancel</button>
       </div>
     </div>
   );
