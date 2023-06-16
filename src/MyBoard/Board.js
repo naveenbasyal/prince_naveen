@@ -1,21 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Board_Nav from "../components/Board_Nav";
 import "../styles/Board.css";
 import "../styles/overlay.css";
+import { useNavigate } from "react-router-dom";
+import { BoardContext } from "../Context/BoardProvider";
 
 const Board = () => {
-  const [boards, setBoards] = useState([]);
-  const [newBoardName, setNewBoardName] = useState("");
-  const [newBoardColor, setNewBoardColor] = useState("black");
-  const [showOverlay, setShowOverlay] = useState(false);
-  const [colors, setColors] = useState([
-    "#A7F0F9",
-    "#C5C5FC",
-    "#FFAEC0",
-    "#FFCC66",
-  ]);
+  const {
+    boards,
+    setBoards,
+    newBoardName,
+    setNewBoardName,
+    newBoardColor,
+    setNewBoardColor,
+    showOverlay,
+    setShowOverlay,
+    colors,
+    selectedBoardIndex,
+    setSelectedBoardIndex,
+  } = useContext(BoardContext);
+
   const inputRef = useRef(null);
-  const [selectedBoardIndex, setSelectedBoardIndex] = useState(null);
+  const navigate = useNavigate();
 
   const handleCreateBoardClick = () => {
     setShowOverlay(true);
@@ -60,6 +66,12 @@ const Board = () => {
     setBoards(updatedBoards);
     setSelectedBoardIndex(null);
   };
+  const handleBoardClick = (index) => {
+    const boardId = index.toString();
+    navigate(`/board/${boardId}`);
+  };
+
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       const optionsModel = document.querySelector(".options__model");
@@ -69,7 +81,7 @@ const Board = () => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
+console.log(boards)
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -79,7 +91,7 @@ const Board = () => {
       <Board_Nav handleCreateBoardClick={handleCreateBoardClick} />
 
       <div className="container my-4">
-        <h3>My Boards</h3>
+        <h3 className="fw-bolder">My Boards</h3>
         <div className="row">
           {boards.length === 0 && (
             <div className="col-lg-3 col-sm-12 mx-3 d-flex my-5 fw-lighter">
@@ -90,6 +102,7 @@ const Board = () => {
             <div
               key={id}
               className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
+              onClick={() => handleBoardClick(id)}
             >
               <div
                 className="board__color "

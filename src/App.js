@@ -16,7 +16,14 @@ const App = () => {
               </BoardProvider>
             }
           />
-          <Route path="/posts" element={<Posts />} />
+          <Route
+            path="/board/:boardId"
+            element={
+              <BoardProvider>
+                <Posts />
+              </BoardProvider>
+            }
+          />
         </Routes>
       </Router>
     </>

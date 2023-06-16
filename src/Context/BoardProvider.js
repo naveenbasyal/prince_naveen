@@ -3,26 +3,36 @@ import React, { createContext, useState } from "react";
 const BoardContext = createContext();
 
 const BoardProvider = ({ children }) => {
-  const [boardName, setBoardName] = useState([]);
-  const [postColor, setPostColor] = useState("black");
+  const [boards, setBoards] = useState([]);
+  const [newBoardName, setNewBoardName] = useState("");
+  const [newBoardColor, setNewBoardColor] = useState("black");
   const [showOverlay, setShowOverlay] = useState(false);
-  const handleCreateBoardClick = () => {
-    setShowOverlay(true);
-    setPostColor("red");
-    console.log(showOverlay);
-    console.log("balck")
-  };
+  const [colors, setColors] = useState([
+    "#A7F0F9",
+    "#C5C5FC",
+    "#FFAEC0",
+    "#FFCC66",
+  ]);
+  
+  const [selectedBoardIndex, setSelectedBoardIndex] = useState(null);
+
 
   return (
     <BoardContext.Provider
       value={{
-        boardName,
-        setBoardName,
-        postColor,
-        setPostColor,
+        boards,
+        setBoards,
+        newBoardName,
+        setNewBoardName,
+        newBoardColor,
+        setNewBoardColor,
         showOverlay,
-        handleCreateBoardClick,
         setShowOverlay,
+        colors,
+        setColors,
+        
+        selectedBoardIndex,
+        setSelectedBoardIndex,
       }}
     >
       {children}

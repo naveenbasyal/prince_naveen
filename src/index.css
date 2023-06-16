@@ -15,3 +15,7 @@
   display: grid;
   place-items: center;
 }
+
+.grey{
+  color: var(--grey_color);
+}
