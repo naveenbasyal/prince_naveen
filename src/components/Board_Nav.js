@@ -2,8 +2,11 @@ import React, { useState, useContext } from "react";
 import { BoardContext, BoardProvider } from "../Context/BoardProvider";
 
 import "../styles/Board_Nav.css";
-const Board_Nav = () => {
-  const { handleCreateBoardClick ,postColor,setPostColor} = useContext(BoardContext);
+const Board_Nav = ({
+  handleCreateBoardClick,
+  postColor,
+}) => {
+  
 
   return (
     <div className="board_nav">
