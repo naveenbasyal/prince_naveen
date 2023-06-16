@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Board_Nav from "../components/Board_Nav";
-// import ov
+import Overlay from "../components/Overlay";
 import { BoardContext, BoardProvider } from "../Context/BoardProvider";
 const Board = () => {
   const { showOverlay, postColor } = useContext(BoardContext);

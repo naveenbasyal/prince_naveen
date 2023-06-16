@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { BoardContext } from "../Context/BoardProvider";
 
 const Overlay = () => {
-  const { setBoardName,setPostColor ,setShowOverlay} = useContext(BoardContext);
+  const { setBoardName,setPostColor ,setShowOverlay,boardName} = useContext(BoardContext);
   return (
     <div className="overlay">
       <div className="overlay_content">

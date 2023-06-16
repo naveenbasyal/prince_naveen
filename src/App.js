@@ -1,12 +1,24 @@
 import React from "react";
 import Board from "./MyBoard/Board";
 import { BoardProvider } from "./Context/BoardProvider";
+import Posts from "./Posts/Posts";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const App = () => {
   return (
     <>
-      <BoardProvider>
-        <Board />
-      </BoardProvider>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <BoardProvider>
+                <Board />
+              </BoardProvider>
+            }
+          />
+          <Route path="/posts" element={<Posts />} />
+        </Routes>
+      </Router>
     </>
   );
 };
