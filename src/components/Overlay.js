@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-
+import { BoardContext } from "../Context/BoardProvider";
 
 const Overlay = ({
   setShowOverlay,

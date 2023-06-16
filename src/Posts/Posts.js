@@ -7,10 +7,8 @@ import { useNavigate } from "react-router-dom";
 const Posts = () => {
   const { boards } = useContext(BoardContext);
   const { boardId } = useParams();
-const navigate= useNavigate();
-  const selectedBoardIndex = parseInt(boardId, 10);
-
-  const selectedBoard = boards[selectedBoardIndex];
+  const navigate= useNavigate();
+  const selectedBoard = boards.find((board) => board.id === boardId);
 
   if (!selectedBoard) {
     return <div>Board not found.</div>;
@@ -21,7 +19,7 @@ const navigate= useNavigate();
     <>
       <div className="post_nav">
         <div className="post_nav_left">
-          <i className="fa-solid fa-arrow-left grey" onClick={navigate('/')}></i>
+          <i className="fa-solid fa-arrow-left grey" onClick={()=>navigate('/')}></i>
           <div className="post_nav_left_img center">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9M2oXreMxXifWakF_qE6WO0kYkm7Gcl1-uGsuXics0A&s"
