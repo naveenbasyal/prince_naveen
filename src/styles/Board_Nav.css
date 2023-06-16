@@ -1,0 +1,80 @@
+.board_nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 20px;
+  height: 50px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+  box-sizing: border-box;
+
+}
+.board_nav_left {
+  display: flex;
+  align-items: center;
+}
+
+.board_nav_left_title {
+  font-size: 16px;
+  /* padding: 5px 0; */
+  /* font-weight: 700; */
+
+  color: #717171;
+}
+.board_nav_left_img img {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.board_nav_right {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 20px;
+}
+.board_nav__search {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  position: relative;
+  padding: 0 20px;
+  margin: 0 20px;
+}
+.board_nav__search_icon {
+  margin-left: 10px;
+  cursor: pointer;
+  position: absolute;
+  font-size: 12px;
+  color: var(--grey_color);
+}
+.board_nav__search input {
+  width: 200px;
+  height: 30px;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: var(--grey_color);
+}
+.create_board {
+  display: flex;
+  align-items: center;
+  padding-left:10px;
+  margin-left:10px;
+  position: relative;
+}
+.create_board .create_board__btn {
+  /* width: 100px; */
+  height: 30px;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  background-color: var(--red_color);
+  font-size: 12 px;
+  color: #ffffff;
+  font-family: 'Avenir Next';
+  cursor: pointer;
+  padding: 4px 14px;
+}
