@@ -4,9 +4,9 @@ import "../styles/Board.css";
 import "../styles/overlay.css";
 
 const Board = () => {
-  const [boards, setBoards] = useState([]); // Renamed state variable to 'boards'
+  const [boards, setBoards] = useState([]); 
   const [newBoardName, setNewBoardName] = useState("");
-  const [newBoardColor, setNewBoardColor] = useState("black"); // Renamed state variable to 'newBoardColor'
+  const [newBoardColor, setNewBoardColor] = useState("black"); 
   const [showOverlay, setShowOverlay] = useState(false);
   const [colors, setColors] = useState([
     "#A7F0F9",
@@ -52,13 +52,17 @@ const Board = () => {
             </div>
           )}
           {boards.map((board, id) => (
-            <div key={id} className="board col-lg-3 col-sm-12 mx-3 d-flex my-5">
+            <div key={id} className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative">
               <div
                 className="board__color "
                 style={{ backgroundColor: board.color }}
               ></div>
               <div className="board__title d-flex align-items-center px-3 text-capitalize">
                 {board.name}
+              </div>
+              <div className="options position-absolute center">
+                <i className="fa-solid fa-ellipsis-v"></i>
+
               </div>
             </div>
           ))}
