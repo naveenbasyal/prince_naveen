@@ -4,9 +4,9 @@ import "../styles/Board.css";
 import "../styles/overlay.css";
 
 const Board = () => {
-  const [boards, setBoards] = useState([]); 
+  const [boards, setBoards] = useState([]);
   const [newBoardName, setNewBoardName] = useState("");
-  const [newBoardColor, setNewBoardColor] = useState("black"); 
+  const [newBoardColor, setNewBoardColor] = useState("black");
   const [showOverlay, setShowOverlay] = useState(false);
   const [colors, setColors] = useState([
     "#A7F0F9",
@@ -15,6 +15,7 @@ const Board = () => {
     "#FFCC66",
   ]);
   const inputRef = useRef(null);
+  const [selectedBoardIndex, setSelectedBoardIndex] = useState(null);
 
   const handleCreateBoardClick = () => {
     setShowOverlay(true);
@@ -39,6 +40,40 @@ const Board = () => {
     setNewBoardColor("black");
   };
 
+  const handleEllipsisClick = (index) => {
+    if (selectedBoardIndex === index) {
+      setSelectedBoardIndex(null);
+    } else {
+      setSelectedBoardIndex(index);
+    }
+  };
+
+  const handleEditBoard = (name) => {
+    setNewBoardName(name);
+    setShowOverlay(true);
+  };
+
+  const handleDeleteBoard = () => {
+    const updatedBoards = boards.filter(
+      (_, index) => index !== selectedBoardIndex
+    );
+    setBoards(updatedBoards);
+    setSelectedBoardIndex(null);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const optionsModel = document.querySelector(".options__model");
+      if (optionsModel && !optionsModel.contains(event.target)) {
+        setSelectedBoardIndex(null); // Close the options model if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <>
       <Board_Nav handleCreateBoardClick={handleCreateBoardClick} />
@@ -52,7 +87,10 @@ const Board = () => {
             </div>
           )}
           {boards.map((board, id) => (
-            <div key={id} className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative">
+            <div
+              key={id}
+              className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
+            >
               <div
                 className="board__color "
                 style={{ backgroundColor: board.color }}
@@ -61,8 +99,28 @@ const Board = () => {
                 {board.name}
               </div>
               <div className="options position-absolute center">
-                <i className="fa-solid fa-ellipsis-v"></i>
-
+                <i
+                  className="fa-solid fa-ellipsis-v pointer dot"
+                  onClick={() => handleEllipsisClick(id)}
+                ></i>
+                {selectedBoardIndex === id && (
+                  <div className="options__model">
+                    <button
+                      onClick={() => handleEditBoard(board.name)}
+                      className="edit_board d-flex align-items-center"
+                    >
+                      <i className="fa-solid fa-pencil me-2"></i>
+                      Edit
+                    </button>
+                    <button
+                      onClick={handleDeleteBoard}
+                      className="delete_board d-flex align-items-center text-danger"
+                    >
+                      <i className="fa-solid fa-trash me-2"></i>
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
