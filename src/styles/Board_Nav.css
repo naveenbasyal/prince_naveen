@@ -2,12 +2,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 20px;
+  padding: 30px 20px;
   height: 50px;
   background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;
   box-sizing: border-box;
 
+}
+.board_nav .search_input{
+  padding: 8px 27px!important;
+}
+.board_nav .search_input:focus{
+  outline: none;
+  /* border: none; */
 }
 .board_nav_left {
   display: flex;
@@ -76,5 +83,5 @@
   color: #ffffff;
   font-family: 'Avenir Next';
   cursor: pointer;
-  padding: 4px 14px;
+  padding: 5px 14px;
 }

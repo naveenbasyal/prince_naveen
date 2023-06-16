@@ -1,8 +1,16 @@
 import React, { useContext } from "react";
-import { BoardContext } from "../Context/BoardProvider";
 
-const Overlay = () => {
-  const { setBoardName,setPostColor ,setShowOverlay,boardName} = useContext(BoardContext);
+
+const Overlay = ({
+  setShowOverlay,
+  setBoardName,
+  setPostColor,
+  showOverlay,
+  boardName,
+  postColor,
+
+
+}) => {
   return (
     <div className="overlay">
       <div className="overlay_content">
@@ -23,7 +31,7 @@ const Overlay = () => {
           <option value="blue">Blue</option>
           <option value="green">Green</option>
         </select>
-        <button onClick={""}>Create</button>
+        <button onClick={() => setShowOverlay(false)}>Create</button>
         <button onClick={() => setShowOverlay(false)}>Cancel</button>
       </div>
     </div>

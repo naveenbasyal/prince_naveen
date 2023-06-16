@@ -1,9 +1,12 @@
 import React, { useState, useContext } from "react";
-import { BoardContext, BoardProvider } from "../Context/BoardProvider";
+
 
 import "../styles/Board_Nav.css";
-const Board_Nav = () => {
-  const { handleCreateBoardClick ,postColor,setPostColor} = useContext(BoardContext);
+const Board_Nav = ({
+  handleCreateBoardClick,
+  postColor,
+}) => {
+  
 
   return (
     <div className="board_nav">
@@ -17,19 +20,19 @@ const Board_Nav = () => {
         <span className="board_nav_left_title">toddle</span>
       </div>
       <div className="board_nav_right">
-        <div className="board_nav__search">
-          <div className="board_nav__search_icon">
+        <div className="board_nav__search d-flex align-items-center">
+          <div className="board_nav__search_icon center">
             <i className="fa-solid fa-search"></i>
           </div>
-          <input type="text" />
-          {postColor}
+          <input type="text" placeholder="Search..." className="search_input"/>
+          
         </div>
         <div className="create_board">
           <button
-            className="create_board__btn"
+            className="create_board__btn d-flex align-items-center py-3"
             onClick={handleCreateBoardClick}
           >
-            <i className="fa-solid fa-plus "></i> Create new board
+            <i className="fa-solid fa-plus me-1"></i> Create new board
           </button>
         </div>
       </div>
