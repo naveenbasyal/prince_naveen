@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Board_Nav from "../components/Board_Nav";
 import "../styles/Board.css";
 import "../styles/overlay.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
-
+import { v4 as uuidv4 } from "uuid";
 const Board = () => {
   const {
     boards,
@@ -34,16 +34,19 @@ const Board = () => {
   }, [showOverlay]);
 
   const handleCreateBoard = () => {
-    const newBoard = { name: newBoardName, color: newBoardColor };
+    const newBoard = { name: newBoardName, color: newBoardColor, id: uuidv4() };
     if (!newBoardName) {
       alert("Please enter a board name");
       return;
     }
 
     setBoards([...boards, newBoard]);
+    localStorage.setItem("boards", JSON.stringify([...boards, newBoard]));
     setShowOverlay(false);
+    
     setNewBoardName("");
     setNewBoardColor("black");
+    navigate(`/board/${newBoard.id}`);
   };
 
   const handleEllipsisClick = (e, index) => {
@@ -102,13 +105,16 @@ const Board = () => {
             <div
               key={id}
               className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
-              onClick={() => handleBoardClick(id)}
             >
               <div
                 className="board__color "
                 style={{ backgroundColor: board.color }}
+                onClick={() => navigate(`/board/${board.id}`)}
               ></div>
-              <div className="board__title d-flex align-items-center px-3 text-capitalize">
+              <div
+                onClick={() => navigate(`/board/${board.id}`)}
+                className="board__title d-flex align-items-center px-3 text-capitalize"
+              >
                 {board.name}
               </div>
               <div className="options position-absolute center">
@@ -167,7 +173,9 @@ const Board = () => {
                   {colors.map((color, id) => (
                     <div
                       key={id}
-                      className="board_color__item"
+                      className={`board_color__item ${
+                        color === newBoardColor ? "active" : ""
+                      }`}
                       style={{ backgroundColor: color }}
                       onClick={() => setNewBoardColor(color)}
                     ></div>

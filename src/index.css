@@ -8,6 +8,9 @@
   --grey_color: #717171;
   --red_color: #d33852;
 }
+a{
+  text-decoration: none;
+}
 .pointer {
   cursor: pointer;
 }

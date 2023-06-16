@@ -17,9 +17,7 @@ const Posts = () => {
   });
   const inputRef = useRef(null);
   const navigate = useNavigate();
-  const selectedBoardIndex = parseInt(boardId, 10);
 
-  const selectedBoard = boards[selectedBoardIndex];
 
   if (!selectedBoard) {
     navigate("/create")
@@ -74,9 +72,10 @@ const Posts = () => {
       <div className="post_nav">
         {console.log("--->", post)}
         <div className="post_nav_left">
-          <Link to="/">
+  <Link to="/">
             <i className="fa-solid fa-arrow-left grey"></i>
           </Link>
+
 
           <div className="post_nav_left_img center">
             <img

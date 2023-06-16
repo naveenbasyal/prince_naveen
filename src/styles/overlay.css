@@ -52,6 +52,10 @@
   transform: scale(0.9);
   border: 2px solid crimson;
 }
+.overlay .board_color__item.active {
+  transform: scale(0.9);
+  border: 2px solid crimson;
+}
 .overlay .board_color__item:active {
   transform: scale(1.2);
   border: 2px solid crimson;

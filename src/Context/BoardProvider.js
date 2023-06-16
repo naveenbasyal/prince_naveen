@@ -3,7 +3,7 @@ import React, { createContext, useState } from "react";
 const BoardContext = createContext();
 
 const BoardProvider = ({ children }) => {
-  const [boards, setBoards] = useState([]);
+  const [boards, setBoards] = useState(JSON.parse(localStorage.getItem("boards")) || []);
   const [newBoardName, setNewBoardName] = useState("");
   const [newBoardColor, setNewBoardColor] = useState("#ddd");
   const [showOverlay, setShowOverlay] = useState(false);
