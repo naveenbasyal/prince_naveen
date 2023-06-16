@@ -23,6 +23,12 @@ const Board = () => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
+  const [editOverlay, setEditOverlay] = useState(false);
+  const [editBoard, setEditBoard] = useState({
+    name: "",
+    color: "",
+    id: "",
+  });
   const handleCreateBoardClick = () => {
     setShowOverlay(true);
   };
@@ -43,10 +49,8 @@ const Board = () => {
     setBoards([...boards, newBoard]);
     localStorage.setItem("boards", JSON.stringify([...boards, newBoard]));
     setShowOverlay(false);
-    
     setNewBoardName("");
     setNewBoardColor("black");
-    navigate(`/board/${newBoard.id}`);
   };
 
   const handleEllipsisClick = (e, index) => {
@@ -58,10 +62,19 @@ const Board = () => {
     }
   };
 
-  const handleEditBoard = (name) => {
-    setNewBoardName(name);
-    setShowOverlay(true);
+  const handleEditBoard = (id) => {
+    setBoards(
+      boards.map((board) =>
+      ( board.id === editBoard.id ? { ...editBoard } : board)
+    )
+    );
+    
+    setEditOverlay(false);
   };
+
+  useEffect(() => {
+    localStorage.setItem("boards", JSON.stringify(boards));
+  },[boards])
 
   const handleDeleteBoard = () => {
     const updatedBoards = boards.filter(
@@ -74,6 +87,14 @@ const Board = () => {
     const boardId = index.toString();
     navigate(`/board/${boardId}`);
   };
+  const deleteBoard = (id)=>{
+    const filterBoards = boards.filter((board)=>{
+      return board.id !== id
+    })
+    setBoards(filterBoards)
+    localStorage.setItem("boards", JSON.stringify(filterBoards));
+    setSelectedBoardIndex(null);
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -125,14 +146,18 @@ const Board = () => {
                 {selectedBoardIndex === id && (
                   <div className="options__model">
                     <button
-                      onClick={() => handleEditBoard(board.name)}
+                      onClick={() => {
+                        setEditBoard(board);
+                        console.log(editBoard);
+                        setEditOverlay(true);
+                      }}
                       className="edit_board d-flex align-items-center"
                     >
                       <i className="fa-solid fa-pencil me-2"></i>
                       Edit
                     </button>
                     <button
-                      onClick={handleDeleteBoard}
+                      onClick={() => deleteBoard(board.id)}
                       className="delete_board d-flex align-items-center text-danger"
                     >
                       <i className="fa-solid fa-trash me-2"></i>
@@ -189,6 +214,58 @@ const Board = () => {
                   className="overlay_create_btn"
                 >
                   Create board
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        
+        {editOverlay && (
+          <div className="overlay">
+            <div className="overlay_content">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <div className="overlay_title d-flex align-items-center m-0">
+                  Edit board name and colour
+                </div>
+                <i
+                  className="fa-solid fa-times"
+                  onClick={() => setEditOverlay(false)}
+                ></i>
+              </div>
+              <div>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="board_input"
+                  value={editBoard.name}
+                  onChange={(e) => setEditBoard({ ...editBoard, name: e.target.value })}
+                  placeholder="Enter board name"
+                />
+              </div>
+              <div className="board_color">
+                <strong>Select post colour</strong>
+                <p>Here are some templates to help you get started</p>
+                <div className="d-flex my-3">
+                  {colors.map((color, id) => (
+                    <div
+                      key={id}
+                      className={`board_color__item ${
+                        color === editBoard.color ? "active" : ""
+                      }`}
+                      style={{ backgroundColor: color }}
+                      onClick={() => setEditBoard({ ...editBoard, color: color })}
+                    ></div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="position-relative">
+                <button
+                  onClick={()=>handleEditBoard(editBoard.id)}
+                  className="overlay_create_btn"
+                >
+                  Edit board
                 </button>
               </div>
             </div>

@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
 import "../styles/posts.css";
 import { useNavigate, Link } from "react-router-dom";
-
+import { v4 as uuidv4 } from "uuid";
 const Posts = () => {
+  console.log("posts");
   const { boards } = useContext(BoardContext);
   const { boardId } = useParams();
   const [postOverlay, setPostOverlay] = useState(false);
@@ -17,12 +18,21 @@ const Posts = () => {
   });
   const inputRef = useRef(null);
   const navigate = useNavigate();
-
-
+  const selectedBoard = boards.find((board) => board.id === boardId);
   if (!selectedBoard) {
-    navigate("/create")
+    navigate("/")
     return;
   }
+  useEffect(()=>{
+    const dbPosts = JSON.parse(localStorage.getItem("posts")) || []
+    if(dbPosts.length > 0)
+  {  const filterPosts= dbPosts.filter((post)=>{
+      return post.boardId === boardId
+    })
+    setPost(filterPosts)}
+
+ 
+  },[boardId])
 
   const { name, color } = selectedBoard;
 
@@ -31,8 +41,10 @@ const Posts = () => {
   };
   // create a new post
   const handleCreatePost = () => {
-    const createdPost = { ...newPost };
+    const createdPost = { ...newPost, boardId, postId: uuidv4() };
     setPost([...post, createdPost]);
+     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    localStorage.setItem("posts", JSON.stringify([...dbPosts, createdPost]));
     setNewPost({
       img: "",
       title: "",
@@ -41,6 +53,20 @@ const Posts = () => {
     setPostOverlay(false);
     console.log(post);
   };
+
+  const deletePost= (id)=>{
+    // console.log(id)
+    const updatedPosts = post.filter((post)=>post.postId !== id)
+    // console.log(updatedPosts)
+    setPost(updatedPosts)
+    const dbPosts = JSON.parse(localStorage.getItem("posts")) || []
+    const filteredPosts = dbPosts.filter((post)=>{
+      return post.postId !== id
+    })
+    // console.log(filteredPosts)
+
+    localStorage.setItem("posts", JSON.stringify(filteredPosts))
+  }
   
   const handlePostEllipsisClick = (e, index) => {
     e.stopPropagation(); // Prevent event propagation for the parent div (board)
@@ -199,14 +225,14 @@ const Posts = () => {
                     {selectedPostIndex === index && (
                       <div className="post_options__model">
                         <button
-                          onClick={() => handleEditPost(post)}
+                          onClick={() => handleEditPost(id)}
                           className="edit_board d-flex align-items-center"
                         >
                           <i className="fa-solid fa-pencil me-2"></i>
                           Edit
                         </button>
                         <button
-                          onClick={handleDeletePost}
+                          onClick={()=>deletePost(post.postId)}
                           className="delete_board d-flex align-items-center text-danger"
                         >
                           <i className="fa-solid fa-trash me-2"></i>

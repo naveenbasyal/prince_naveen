@@ -3,13 +3,14 @@ import Board from "./MyBoard/Board";
 import { BoardProvider } from "./Context/BoardProvider";
 import Posts from "./Posts/Posts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import BookMarks from "./BookMarks";
 const App = () => {
   return (
     <>
       <Router>
         <Routes>
           <Route
-            path="/create"
+            path="/"
             element={
               <BoardProvider>
                 <Board />
@@ -23,6 +24,14 @@ const App = () => {
                 <Posts />
               </BoardProvider>
             }
+          />
+          <Route
+          path="/bookmarks"
+          element={
+            <BoardProvider>
+              <BookMarks/>
+              </BoardProvider>
+          }
           />
         </Routes>
       </Router>
