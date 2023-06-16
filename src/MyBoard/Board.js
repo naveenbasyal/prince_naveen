@@ -17,13 +17,21 @@ const Board = () => {
     showOverlay,
     setShowOverlay,
     colors,
-    selectedBoardIndex,
-    setSelectedBoardIndex,
+    searchFilteredBoards,
   } = useContext(BoardContext);
 
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
+  //  Overlays for editing boards
+  const [editOverlay, setEditOverlay] = useState(false);
+  const [editBoard, setEditBoard] = useState({
+    name: "",
+    color: "",
+    id: "",
+  });
+
+  const [hoveredBoardIndex, setHoveredBoardIndex] = useState(null);
   const handleCreateBoardClick = () => {
     setShowOverlay(true);
   };
@@ -32,8 +40,11 @@ const Board = () => {
     if (showOverlay) {
       inputRef.current.focus();
     }
+    document.title = "Digital Wall | Boards";
+    
   }, [showOverlay]);
 
+  // ----- Create a new Board
   const handleCreateBoard = () => {
     const newBoard = { name: newBoardName, color: newBoardColor, id: uuidv4() };
     if (!newBoardName) {
@@ -58,66 +69,42 @@ const Board = () => {
       });
       return;
     }
-
     setBoards([...boards, newBoard]);
     localStorage.setItem("boards", JSON.stringify([...boards, newBoard]));
     setShowOverlay(false);
-
     setNewBoardName("");
     setNewBoardColor("");
+    navigate(`/board/${newBoard.id}`);
   };
 
-  const handleEllipsisClick = (e, index) => {
-    e.stopPropagation(); // Prevent event propagation for the parent div (board)
-    if (selectedBoardIndex === index) {
-      setSelectedBoardIndex(null);
-    } else {
-      setSelectedBoardIndex(index);
-    }
-  };
-
-  const handleEditBoard = (name) => {
-    setNewBoardName(name);
-    setShowOverlay(true);
-  };
-
-  const handleDeleteBoard = (e) => {
-    const updatedBoards = boards.filter(
-      (_, index) => index !== selectedBoardIndex
+  // -------------- Edit Board ----------------
+  const handleEditBoard = (id) => {
+    setBoards(
+      boards.map((board) =>
+        board.id === editBoard.id ? { ...editBoard } : board
+      )
     );
-    setBoards(updatedBoards);
-    setSelectedBoardIndex(null);
-    // Remove the board from localStorage
-    const storedBoards = JSON.parse(localStorage.getItem("boards"));
-    const updatedStoredBoards = storedBoards.filter(
-      (_, index) => index !== selectedBoardIndex
-    );
-    localStorage.setItem("boards", JSON.stringify(updatedStoredBoards));
-    navigate("/create");
-  };
-  const handleBoardClick = (index) => {
-    const boardId = index.toString();
-    navigate(`/board/${boardId}`);
+
+    setEditOverlay(false);
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      const optionsModel = document.querySelector(".options__model");
-      if (optionsModel && !optionsModel.contains(event.target)) {
-        setSelectedBoardIndex(null); // Close the options model if clicked outside
-      }
-    };
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }, [boards]);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    console.log(boards);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // ----------Delete Board----------------
+  const deleteBoard = (id) => {
+    const filterBoards = boards.filter((board) => {
+      return board.id !== id;
+    });
+    setBoards(filterBoards);
+    localStorage.setItem("boards", JSON.stringify(filterBoards));
+  };
+
   return (
     <>
       <Board_Nav handleCreateBoardClick={handleCreateBoardClick} />
-      <ToastContainer/>
+      <ToastContainer />
       <div className="container my-4">
         <h3 className="fw-bolder">My Boards</h3>
         <div className="row">
@@ -126,11 +113,10 @@ const Board = () => {
               <strong> No boards to show</strong>
             </div>
           )}
-          {boards.map((board, id) => (
+          {searchFilteredBoards.map((board, id) => (
             <div
               key={id}
               className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
-              onClick={() => handleBoardClick(id)}
             >
               <div
                 className="board__color "
@@ -146,19 +132,26 @@ const Board = () => {
               <div className="options position-absolute center">
                 <i
                   className="fa-solid fa-ellipsis-v pointer dot"
-                  onClick={(e) => handleEllipsisClick(e, id)}
+                  onMouseEnter={() => setHoveredBoardIndex(id)}
                 ></i>
-                {selectedBoardIndex === id && (
-                  <div className="options__model">
+                {hoveredBoardIndex === id && (
+                  <div
+                    className="options__model"
+                    onMouseLeave={() => setHoveredBoardIndex(null)}
+                  >
                     <button
-                      onClick={() => handleEditBoard(board.name)}
-                      className="edit_board d-flex grey align-items-center"
+                      onClick={() => {
+                        setEditBoard(board);
+                        console.log(editBoard);
+                        setEditOverlay(true);
+                      }}
+                      className="edit_board d-flex align-items-center"
                     >
                       <i className="fa-solid fa-pencil me-2"></i>
                       Edit
                     </button>
                     <button
-                      onClick={handleDeleteBoard}
+                      onClick={() => deleteBoard(board.id)}
                       className="delete_board d-flex align-items-center text-danger"
                     >
                       <i className="fa-solid fa-trash me-2"></i>
@@ -215,6 +208,62 @@ const Board = () => {
                   className="overlay_create_btn"
                 >
                   Create board
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ------------Board Edit Overlay--------- */}
+        {editOverlay && (
+          <div className="overlay">
+            <div className="overlay_content">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <div className="overlay_title d-flex align-items-center m-0">
+                  Edit board name and colour
+                </div>
+                <i
+                  className="fa-solid fa-times"
+                  onClick={() => setEditOverlay(false)}
+                ></i>
+              </div>
+              <div>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="board_input"
+                  value={editBoard.name}
+                  onChange={(e) =>
+                    setEditBoard({ ...editBoard, name: e.target.value })
+                  }
+                  placeholder="Enter board name"
+                />
+              </div>
+              <div className="board_color">
+                <strong>Select post colour</strong>
+                <p>Here are some templates to help you get started</p>
+                <div className="d-flex my-3">
+                  {colors.map((color, id) => (
+                    <div
+                      key={id}
+                      className={`board_color__item ${
+                        color === editBoard.color ? "active" : ""
+                      }`}
+                      style={{ backgroundColor: color }}
+                      onClick={() =>
+                        setEditBoard({ ...editBoard, color: color })
+                      }
+                    ></div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="position-relative">
+                <button
+                  onClick={() => handleEditBoard(editBoard.id)}
+                  className="overlay_create_btn"
+                >
+                  Edit board
                 </button>
               </div>
             </div>

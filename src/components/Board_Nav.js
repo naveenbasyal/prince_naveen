@@ -1,16 +1,17 @@
-import React, { useState, useContext } from "react";
-
-
+import React, { useState, useContext, useEffect } from "react";
 import "../styles/Board_Nav.css";
-const Board_Nav = ({
-  handleCreateBoardClick,
-  postColor,
-}) => {
-  
+import { BoardContext } from "../Context/BoardProvider";
+
+const Board_Nav = ({ handleCreateBoardClick }) => {
+  const { setSearchQuery, searchQuery } = useContext(BoardContext);
+
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
-    <div className="board_nav">
-      <div className="board_nav_left">
+    <div className="board_nav ">
+      <div className="board_nav_left ">
         <div className="board_nav_left_img">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9M2oXreMxXifWakF_qE6WO0kYkm7Gcl1-uGsuXics0A&s"
@@ -24,8 +25,13 @@ const Board_Nav = ({
           <div className="board_nav__search_icon center">
             <i className="fa-solid fa-search"></i>
           </div>
-          <input type="text" placeholder="Search..." className="search_input"/>
-          
+          <input
+            type="text"
+            placeholder="Search..."
+            className="search_input"
+            value={searchQuery} // Step 2: Bind search query value to input field
+            onChange={handleSearchInputChange} // Step 2: Attach onChange event handler
+          />
         </div>
         <div className="create_board">
           <button

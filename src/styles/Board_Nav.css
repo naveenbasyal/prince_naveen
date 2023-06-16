@@ -2,18 +2,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 20px;
+  padding: 30px 30px;
   height: 50px;
   background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;
   box-sizing: border-box;
-
 }
-.board_nav .search_input{
-  padding: 8px 27px!important;
+.board_nav_left{
+  margin-left: 2.5rem;
 }
-.board_nav .search_input:focus{
-  outline: none;
+.board_nav .search_input {
+  padding: 8px 27px !important;
+}
+.board_nav .search_input:focus {
+  outline-color: #d33852;
   /* border: none; */
 }
 .board_nav_left {
@@ -22,15 +24,12 @@
 }
 
 .board_nav_left_title {
-  font-size: 16px;
-  /* padding: 5px 0; */
-  /* font-weight: 700; */
-
+  font-size: 19px;
   color: #717171;
 }
 .board_nav_left_img img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   margin-left: 10px;
   border-radius: 50%;
   cursor: pointer;
@@ -69,19 +68,19 @@
 .create_board {
   display: flex;
   align-items: center;
-  padding-left:10px;
-  margin-left:10px;
+  padding-left: 10px;
+  margin-left: 10px;
   position: relative;
 }
 .create_board .create_board__btn {
   /* width: 100px; */
   height: 30px;
   border: 1px solid #e6e6e6;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: var(--red_color);
   font-size: 12 px;
   color: #ffffff;
-  font-family: 'Avenir Next';
+  font-family: "Avenir Next";
   cursor: pointer;
   padding: 5px 14px;
 }

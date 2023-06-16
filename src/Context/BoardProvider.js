@@ -3,7 +3,9 @@ import React, { createContext, useState } from "react";
 const BoardContext = createContext();
 
 const BoardProvider = ({ children }) => {
-  const [boards, setBoards] = useState(JSON.parse(localStorage.getItem("boards")) || []);
+  const [boards, setBoards] = useState(
+    JSON.parse(localStorage.getItem("boards")) || []
+  );
   const [newBoardName, setNewBoardName] = useState("");
   const [newBoardColor, setNewBoardColor] = useState("");
   const [showOverlay, setShowOverlay] = useState(false);
@@ -13,9 +15,19 @@ const BoardProvider = ({ children }) => {
     "#ffc9d5",
     "#ffe3ac",
   ]);
-  
+
   const [selectedBoardIndex, setSelectedBoardIndex] = useState(null);
 
+  // ------- Search Functionality -------
+  const [searchQuery, setSearchQuery] = useState(""); // storing the user's query
+
+  const searchFilteredBoards = boards.filter((board) => {
+    return (
+      board.name && board.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
+  
 
   return (
     <BoardContext.Provider
@@ -32,6 +44,9 @@ const BoardProvider = ({ children }) => {
         setColors,
         selectedBoardIndex,
         setSelectedBoardIndex,
+        searchFilteredBoards, 
+        searchQuery, 
+        setSearchQuery, 
       }}
     >
       {children}

@@ -3,80 +3,127 @@ import { useParams } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
 import "../styles/posts.css";
 import { useNavigate, Link } from "react-router-dom";
-
+import { v4 as uuidv4 } from "uuid";
 const Posts = () => {
   const { boards } = useContext(BoardContext);
   const { boardId } = useParams();
-  const [postOverlay, setPostOverlay] = useState(false);
-  const [post, setPost] = useState([]);
-  const [selectedPostIndex, setSelectedPostIndex] = useState(null);
+  const inputRef = useRef(null);
+
+  // ------- Actual array of post ------
+  const [post, setPost] = useState(
+    JSON.parse(localStorage.getItem("posts")) || []
+  );
   const [newPost, setNewPost] = useState({
     img: "",
     title: "",
     content: "",
   });
-  const inputRef = useRef(null);
-  const navigate = useNavigate();
-  const selectedBoardIndex = parseInt(boardId, 10);
 
-  const selectedBoard = boards[selectedBoardIndex];
+  // -------- Search Functionaly --------
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchFilteredPosts = post.filter((item) => {
+    return (
+      item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+  useEffect(() => {
+    console.log("Serach Post", searchFilteredPosts);
+    document.title = name;
+  }, [searchFilteredPosts]);
 
-  if (!selectedBoard) {
-    navigate("/create")
-    return;
-  }
+  // ------- Ovelays for new post ------
+  const [postOverlay, setPostOverlay] = useState(false);
+  const [editPostOverlay, setEditPostOverlay] = useState(false);
+  const [editPost, setEditPost] = useState({
+    img: "",
+    title: "",
+    content: "",
+  });
+
+  const [hoverPostIndex, setHoverPostIndex] = useState(null);
+
+  const selectedBoard = boards.find((board) => board.id === boardId);
+
+  useEffect(() => {
+    const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    if (dbPosts.length > 0) {
+      const filterPosts = dbPosts.filter((post) => {
+        return post.boardId === boardId;
+      });
+      setPost(filterPosts);
+    }
+  }, [boardId]);
 
   const { name, color } = selectedBoard;
 
+  // create post button
   const handleCreatePostClick = () => {
     setPostOverlay(true);
   };
-  // create a new post
+  // --------- create a new post --------
   const handleCreatePost = () => {
-    const createdPost = { ...newPost };
+    const createdPost = { ...newPost, boardId, postId: uuidv4() };
     setPost([...post, createdPost]);
+    const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    localStorage.setItem("posts", JSON.stringify([...dbPosts, createdPost]));
     setNewPost({
+      id: "",
       img: "",
       title: "",
       content: "",
     });
     setPostOverlay(false);
-    console.log(post);
   };
-  
-  const handlePostEllipsisClick = (e, index) => {
-    e.stopPropagation(); // Prevent event propagation for the parent div (board)
-    if (selectedPostIndex === index) {
-      setSelectedPostIndex(null);
-    } else {
-      setSelectedPostIndex(index);
-    }
-  };
-  const handleEditPost = (post) => {
-    setNewPost({
-      ...newPost,
-      title: post.title,
-      content: post.content,
-      img: post.img,
-    });
-    setPostOverlay(true);
-  };
-  const handleDeletePost = () => {
-    const updatedPosts = post.filter(
-      (_, index) => index !== selectedPostIndex
+
+  // ------ Edit your post ------
+  const handleEditPost = (id) => {
+    setPost(
+      post.map((post) => {
+        if (post.postId === id) {
+          return {
+            ...post,
+            img: editPost.img,
+            title: editPost.title,
+            content: editPost.content,
+          };
+        }
+        return post;
+      })
     );
+    const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    const updatedPosts = dbPosts.map((post) => {
+      if (post.postId === id) {
+        return {
+          ...post,
+          img: editPost.img,
+          title: editPost.title,
+          content: editPost.content,
+        };
+      }
+      return post;
+    });
+    localStorage.setItem("posts", JSON.stringify(updatedPosts));
+    setEditPostOverlay(false);
+  };
+  // -------------- Delete your post----------------
+  const deletePost = (id) => {
+    const updatedPosts = post.filter((post) => post.postId !== id);
     setPost(updatedPosts);
-    setSelectedPostIndex(null);
+    const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    const filteredPosts = dbPosts.filter((post) => {
+      return post.postId !== id;
+    });
+
+    localStorage.setItem("posts", JSON.stringify(filteredPosts));
   };
 
   return (
     <>
       <div className="post_nav">
-        {console.log("--->", post)}
+        
         <div className="post_nav_left">
           <Link to="/create">
-            <i className="fa-solid fa-arrow-left grey"
-            ></i>
+            <i className="fa-solid fa-arrow-left grey fs-5"></i>
           </Link>
 
           <div className="post_nav_left_img center">
@@ -86,12 +133,23 @@ const Posts = () => {
             />
           </div>
           <div className="board_name center">
-            <strong>{name}</strong>
+            <strong >{name}</strong>
           </div>
         </div>
         <div className="post_nav_right grey">
-          <i className="fa-solid fa-search"></i> |
-          <i className="fa-solid fa-bookmark"></i>
+          <div className="board_nav__search d-flex align-items-center">
+            <div className="board_nav__search_icon center">
+              <i className="fa-solid fa-search"></i>
+            </div>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="search_input ps-5"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>{" "}
+          |<i className="fa-solid fa-bookmark"></i>
         </div>
       </div>
       <div className="main_post_area" style={{ background: `${color}` }}>
@@ -184,11 +242,13 @@ const Posts = () => {
               <img src="/images/NoPostMobile.png" alt="No post image " />
             </div>
             <strong> Nothing here yet</strong>
-            <p className="grey">create your first page by clicking on the '+' button above</p>
+            <p className="grey">
+              create your first page by clicking on the '+' button above
+            </p>
           </div>
         ) : (
           <div className="post_area row">
-            {post.map((post, index) => (
+            {searchFilteredPosts.map((post, index) => (
               <div className="post col-lg-3 col-sm-12" key={index}>
                 <div className="post_header d-flex align-items-center">
                   <div className="post_body_title">
@@ -199,19 +259,26 @@ const Posts = () => {
 
                     <i
                       className="fa-solid fa-ellipsis-h"
-                      onClick={(e) => handlePostEllipsisClick(e, index)}
+                      onMouseEnter={() => setHoverPostIndex(index)}
                     ></i>
-                    {selectedPostIndex === index && (
-                      <div className="post_options__model">
+                    {hoverPostIndex === index && (
+                      <div
+                        className="post_options__model"
+                        onMouseLeave={() => setHoverPostIndex(null)}
+                      >
                         <button
-                          onClick={() => handleEditPost(post)}
+                          onClick={() => {
+                            setEditPost({ ...post });
+                            // console.log(editPost);
+                            setEditPostOverlay(true);
+                          }}
                           className="edit_board d-flex align-items-center"
                         >
                           <i className="fa-solid fa-pencil me-2"></i>
                           Edit
                         </button>
                         <button
-                          onClick={handleDeletePost}
+                          onClick={() => deletePost(post.postId)}
                           className="delete_board d-flex align-items-center text-danger"
                         >
                           <i className="fa-solid fa-trash me-2"></i>
@@ -221,6 +288,7 @@ const Posts = () => {
                     )}
                   </div>
                 </div>
+                {/*  ---------------Post Image------------- */}
                 <div className="post_header_img img-fluid">
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTspvZboedMPZ9SHmJOM-0s1pxv1vT7HN5iMaHeNms&s"
@@ -240,6 +308,81 @@ const Posts = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Edit Post Overlay */}
+        {editPostOverlay && (
+          <div className="postOverlay">
+            <div className="postOverlay_content">
+              <div className="d-flex align-items-center position-relative mb-4">
+                <div className="post_overlay_title ">
+                  <div>
+                    <strong className="fs-5">Edit your Post </strong>
+                    <p className="grey">
+                      you can edit the subject, image and content
+                    </p>
+                  </div>
+                  <i
+                    className="fa-solid fa-times"
+                    onClick={() => setEditPostOverlay(false)}
+                  ></i>
+                </div>
+              </div>
+              <div className="subject">
+                <label htmlFor="postTitle" className="my-1">
+                  Subject
+                </label>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  name="postTitle"
+                  className="board_input"
+                  value={editPost.title}
+                  onChange={(e) =>
+                    setEditPost({ ...editPost, title: e.target.value })
+                  }
+                  placeholder="Enter subject here"
+                />
+              </div>
+              {/* post Image */}
+              <div className="post_image">
+                <label htmlFor="postImage" className="u-f-b">
+                  <i className="fa-solid fa-image me-2"></i>
+                  Add your image
+                  <input
+                    type="file"
+                    name="postImage"
+                    id="postImage"
+                    onChange={(e) =>
+                      setEditPost({ ...editPost, img: e.target.value })
+                    }
+                  />
+                </label>
+              </div>
+              {/* post content */}
+              <div className="post_content">
+                <div className="mt-5 fw-bold mb-3">What's on your mind?</div>
+                <textarea
+                  name="postContent"
+                  value={editPost.content}
+                  onChange={(e) =>
+                    setEditPost({ ...editPost, content: e.target.value })
+                  }
+                  placeholder="Type here"
+                ></textarea>
+              </div>
+
+              {/*  edit post button */}
+              <div className="position-relative">
+                <button
+                  onClick={() => handleEditPost(editPost.postId)}
+                  className="postOverlay_create_btn"
+                >
+                  Edit Post
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

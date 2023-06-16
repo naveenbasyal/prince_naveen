@@ -38,3 +38,6 @@ a{
 .u-f-b input {
   display: none;
 }
+.search_input:focus{
+outline-color: #d33852;
+}
