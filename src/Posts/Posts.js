@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
 import "../styles/posts.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Posts = () => {
   const { boards } = useContext(BoardContext);
   const { boardId } = useParams();
-const navigate= useNavigate();
+  const navigate = useNavigate();
   const selectedBoardIndex = parseInt(boardId, 10);
 
   const selectedBoard = boards[selectedBoardIndex];
@@ -20,8 +20,12 @@ const navigate= useNavigate();
   return (
     <>
       <div className="post_nav">
+        {console.log("heelo", color)}
         <div className="post_nav_left">
-          <i className="fa-solid fa-arrow-left grey" onClick={navigate('/')}></i>
+          <Link to="/">
+            <i className="fa-solid fa-arrow-left grey"></i>
+          </Link>
+
           <div className="post_nav_left_img center">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9M2oXreMxXifWakF_qE6WO0kYkm7Gcl1-uGsuXics0A&s"
@@ -37,11 +41,15 @@ const navigate= useNavigate();
           <i className="fa-solid fa-bookmark"></i>
         </div>
       </div>
-      <div className="post_header">
-        <h3>Your posts</h3>
-        <div className="create_posts">
-          <i className="fa-solid fa-plus"></i>
-          <button>Create new Post</button>
+      <div className="main_post_area" style={{ background: `${color}` }}>
+        <div className="post_header  d-flex ">
+          <div className="fw-bold fs-4 pt-2 ">Your posts</div>
+          <div className="post_create_btn">
+            <button onClick={""}>
+              {" "}
+              <i className="fa-solid fa-plus me-2"></i>Create new post
+            </button>
+          </div>
         </div>
       </div>
     </>

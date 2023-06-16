@@ -5,7 +5,7 @@ const BoardContext = createContext();
 const BoardProvider = ({ children }) => {
   const [boards, setBoards] = useState([]);
   const [newBoardName, setNewBoardName] = useState("");
-  const [newBoardColor, setNewBoardColor] = useState("black");
+  const [newBoardColor, setNewBoardColor] = useState("#ddd");
   const [showOverlay, setShowOverlay] = useState(false);
   const [colors, setColors] = useState([
     "#A7F0F9",

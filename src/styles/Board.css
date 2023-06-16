@@ -3,6 +3,7 @@
   padding: 0;
   border: 1px solid #ddd;
   width: 300px;
+  z-index: 0;
   cursor: pointer;
 }
 .board .board__color {
@@ -37,7 +38,7 @@
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  z-index: 1;
+  z-index: 22;
   display: flex;
   flex-direction: column;
   padding: 4px;
