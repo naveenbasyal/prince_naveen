@@ -5,7 +5,7 @@ const BoardContext = createContext();
 const BoardProvider = ({ children }) => {
   const [boards, setBoards] = useState(JSON.parse(localStorage.getItem("boards")) || []);
   const [newBoardName, setNewBoardName] = useState("");
-  const [newBoardColor, setNewBoardColor] = useState("#ddd");
+  const [newBoardColor, setNewBoardColor] = useState("");
   const [showOverlay, setShowOverlay] = useState(false);
   const [colors, setColors] = useState([
     "#d2faff",
@@ -30,7 +30,6 @@ const BoardProvider = ({ children }) => {
         setShowOverlay,
         colors,
         setColors,
-        
         selectedBoardIndex,
         setSelectedBoardIndex,
       }}

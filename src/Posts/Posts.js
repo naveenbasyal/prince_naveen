@@ -63,7 +63,7 @@ const Posts = () => {
   };
   const handleDeletePost = () => {
     const updatedPosts = post.filter(
-      (_, index) => index !== selectedBoardIndex
+      (_, index) => index !== selectedPostIndex
     );
     setPost(updatedPosts);
     setSelectedPostIndex(null);
@@ -85,7 +85,7 @@ const Posts = () => {
               alt=""
             />
           </div>
-          <div class="board_name center">
+          <div className="board_name center">
             <strong>{name}</strong>
           </div>
         </div>
@@ -180,8 +180,11 @@ const Posts = () => {
         {/* Post Area */}
         {post.length === 0 ? (
           <div className="center mt-5">
+            <div className="img-fluid mt-5">
+              <img src="/images/NoPostMobile.png" alt="No post image " />
+            </div>
             <strong> Nothing here yet</strong>
-            <p>create your first page by clicking on the '+' button above</p>
+            <p className="grey">create your first page by clicking on the '+' button above</p>
           </div>
         ) : (
           <div className="post_area row">

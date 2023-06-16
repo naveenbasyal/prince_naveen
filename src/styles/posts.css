@@ -55,7 +55,7 @@
   font-size: 14px;
 }
 .main_post_area {
-  height: 100vh;
+  min-height: 100vh;
   padding: 1rem 5rem;
 }
 

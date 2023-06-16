@@ -5,6 +5,7 @@ import "../styles/overlay.css";
 import { Link, useNavigate } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
 const Board = () => {
   const {
     boards,
@@ -36,17 +37,34 @@ const Board = () => {
   const handleCreateBoard = () => {
     const newBoard = { name: newBoardName, color: newBoardColor, id: uuidv4() };
     if (!newBoardName) {
-      alert("Please enter a board name");
+      toast.error("Please enter a board name", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        theme: "colored",
+      });
+      return;
+    }
+    if (!newBoardColor) {
+      toast.error("Please Choose the color", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        theme: "colored",
+      });
       return;
     }
 
     setBoards([...boards, newBoard]);
     localStorage.setItem("boards", JSON.stringify([...boards, newBoard]));
     setShowOverlay(false);
-    
+
     setNewBoardName("");
-    setNewBoardColor("black");
-    
+    setNewBoardColor("");
   };
 
   const handleEllipsisClick = (e, index) => {
@@ -63,12 +81,19 @@ const Board = () => {
     setShowOverlay(true);
   };
 
-  const handleDeleteBoard = () => {
+  const handleDeleteBoard = (e) => {
     const updatedBoards = boards.filter(
       (_, index) => index !== selectedBoardIndex
     );
     setBoards(updatedBoards);
     setSelectedBoardIndex(null);
+    // Remove the board from localStorage
+    const storedBoards = JSON.parse(localStorage.getItem("boards"));
+    const updatedStoredBoards = storedBoards.filter(
+      (_, index) => index !== selectedBoardIndex
+    );
+    localStorage.setItem("boards", JSON.stringify(updatedStoredBoards));
+    navigate("/create");
   };
   const handleBoardClick = (index) => {
     const boardId = index.toString();
@@ -92,7 +117,7 @@ const Board = () => {
   return (
     <>
       <Board_Nav handleCreateBoardClick={handleCreateBoardClick} />
-
+      <ToastContainer/>
       <div className="container my-4">
         <h3 className="fw-bolder">My Boards</h3>
         <div className="row">
@@ -105,7 +130,7 @@ const Board = () => {
             <div
               key={id}
               className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
-              onClick={()=>handleBoardClick(id)}
+              onClick={() => handleBoardClick(id)}
             >
               <div
                 className="board__color "
@@ -127,7 +152,7 @@ const Board = () => {
                   <div className="options__model">
                     <button
                       onClick={() => handleEditBoard(board.name)}
-                      className="edit_board d-flex align-items-center"
+                      className="edit_board d-flex grey align-items-center"
                     >
                       <i className="fa-solid fa-pencil me-2"></i>
                       Edit
@@ -153,7 +178,7 @@ const Board = () => {
                   Add a name for your board
                 </div>
                 <i
-                  className="fa-solid fa-times"
+                  className="fa-solid fa-times pointer"
                   onClick={() => setShowOverlay(false)}
                 ></i>
               </div>
