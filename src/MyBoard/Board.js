@@ -41,6 +41,26 @@ const Board = () => {
       inputRef.current.focus();
     }
     document.title = "Digital Wall | Boards";
+    // Check if the info message has been shown before
+    const infoMessageShown = localStorage.getItem("infoMessageShown");
+
+    if (!infoMessageShown) {
+      // Show the info message
+      toast.info(
+        "Welcome to the app! This app contains all the features mentioned to do.",
+        {
+          position: "top-center",
+          autoClose: 7000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          theme: "colored",
+        }
+      );
+
+      // Store the flag indicating that the info message has been shown
+      localStorage.setItem("infoMessageShown", "true");
+    }
   }, [showOverlay]);
 
   // ---------- Create a new Board----------------
@@ -97,6 +117,14 @@ const Board = () => {
       return board.id !== id;
     });
     setBoards(filterBoards);
+    //the posts of the board will also be deleted
+    const filterPosts = JSON.parse(localStorage.getItem("posts")).filter(
+      (post) => {
+        return post.boardId !== id;
+      }
+    );
+    localStorage.setItem("posts", JSON.stringify(filterPosts));
+
     localStorage.setItem("boards", JSON.stringify(filterBoards));
   };
 
