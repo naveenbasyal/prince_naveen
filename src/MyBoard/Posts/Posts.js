@@ -243,6 +243,12 @@ const Posts = () => {
             title="Show Liked posts"
             className={`fa-heart me-2 ${showLikedPosts ? `fas red` : "far"}`}
             onClick={() => {
+              if(posts.length === 0) {
+                toast.error("No posts to show",{
+                  position: "top-center",
+                });
+                return;
+              };
               setShowLikedPosts(!showLikedPosts);
               setShowBookMarkPosts(false);
               setLikedPosts(posts.filter((post) => post.like === true));
@@ -255,6 +261,12 @@ const Posts = () => {
               showBookMarkPosts ? `fas red` : "far"
             }`}
             onClick={() => {
+              if(posts.length === 0) {
+                toast.error("No posts to show",{
+                  position: "top-center",
+                });
+                return;
+              }
               setShowLikedPosts(false);
               setShowBookMarkPosts(!showBookMarkPosts);
               setBookMarkPosts(posts.filter((post) => post.bookmark === true));
