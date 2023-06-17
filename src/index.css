@@ -8,7 +8,15 @@
   --grey_color: #717171;
   --red_color: #d33852;
 }
-a{
+.red {
+  color: #d33852;
+}
+.red:hover,
+.red:focus,
+.red:active {
+  transform: scale(1.1)!important;
+}
+a {
   text-decoration: none;
 }
 .pointer {
@@ -38,7 +46,6 @@ a{
 .u-f-b input {
   display: none;
 }
-.search_input:focus{
-outline-color: #d33852;
+.search_input:focus {
+  outline-color: #d33852;
 }
-

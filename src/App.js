@@ -1,7 +1,7 @@
 import React from "react";
 import Board from "./MyBoard/Board";
 import { BoardProvider } from "./Context/BoardProvider";
-import Posts from "./Posts/Posts";
+import Posts from "./MyBoard/Posts/Posts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {

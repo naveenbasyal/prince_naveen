@@ -48,6 +48,7 @@ const BoardProvider = ({ children }) => {
   const [editPostOverlay, setEditPostOverlay] = useState(false);
   const [editPost, setEditPost] = useState({ img: "", title: "", content: "" });
 
+  const [bookMarkPosts, setBookMarkPosts] = useState([]);
 
   return (
     <BoardContext.Provider
@@ -79,6 +80,8 @@ const BoardProvider = ({ children }) => {
         setEditPostOverlay,
         editPost,
         setEditPost,
+        bookMarkPosts,
+        setBookMarkPosts
           
       }}
     >

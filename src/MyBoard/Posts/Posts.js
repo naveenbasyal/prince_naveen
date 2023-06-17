@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { BoardContext } from "../Context/BoardProvider";
+import { BoardContext } from "../../Context/BoardProvider";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import "../styles/posts.css";
+import "../../styles/posts.css";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
@@ -22,6 +22,8 @@ const Posts = () => {
     setEditPostOverlay,
     editPost,
     setEditPost,
+    bookMarkPosts,
+    setBookMarkPosts,
   } = useContext(BoardContext);
 
   // Getting the boardId from the url
@@ -29,6 +31,7 @@ const Posts = () => {
   const inputRef = useRef(null);
   const sw = window.screen.width;
 
+  const [showBookMarkPosts, setShowBookMarkPosts] = useState(false);
   // Search functionality
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -63,7 +66,6 @@ const Posts = () => {
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
-        // theme: "colored",
       });
       return;
     }
@@ -225,10 +227,20 @@ const Posts = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>{" "}
-          |<i className="fa-solid fa-bookmark"></i>
+          |
+          <i
+            title="Bookmark posts"
+            className={`fa-bookmark me-2 ${
+              showBookMarkPosts ? `fas red` : "far"
+            }`}
+            onClick={() => {
+             setShowBookMarkPosts(!showBookMarkPosts);
+             setBookMarkPosts(posts.filter((post) => post.bookmark === true));
+            }}
+          ></i>
         </div>
       </div>
-
+      {console.log("Bookamrk", bookMarkPosts)};
       <div className="main_post_area" style={{ background: `${color}` }}>
         <div className="post_header  d-flex ">
           <div className="fw-bold fs-4 pt-2 ">Your posts</div>
@@ -246,7 +258,7 @@ const Posts = () => {
                 <img src="/images/NoPostMobile.png" alt="No post image " />
               </div>
               <strong> Nothing here yet</strong>
-              <p className="grey">
+              <p className="grey center">
                 create your first page by clicking on the '+' button above
               </p>
             </div>
@@ -306,7 +318,6 @@ const Posts = () => {
                                     <button
                                       onClick={() => {
                                         setEditPost({ ...post });
-
                                         setEditPostOverlay(true);
                                       }}
                                       className="edit_board d-flex align-items-center"
@@ -326,14 +337,17 @@ const Posts = () => {
                               </div>
                             </div>
                             {/*  ---------------Post Image------------- */}
-                            <div className="post_header_img img-fluid">
-                              <img
-                                // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTspvZboedMPZ9SHmJOM-0s1pxv1vT7HN5iMaHeNms&s"
-                                src={post.img}
-                                alt=""
-                              />
-                            </div>
-                            <div className="post_body">
+                            {post.img && (
+                              <div className="post_header_img img-fluid">
+                                <img
+                                  // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTspvZboedMPZ9SHmJOM-0s1pxv1vT7HN5iMaHeNms&s"
+                                  src={post.img}
+                                  alt=""
+                                />
+                              </div>
+                            )}
+
+                            <div className="post_body mt-3">
                               <div className="post_body_content">
                                 <p>{post.content}</p>
                               </div>
@@ -370,7 +384,6 @@ const Posts = () => {
           )}
         </DragDropContext>
       </div>
-
       {/* Post Overlay */}
       {postOverlay && (
         <div className="postOverlay">
@@ -451,7 +464,6 @@ const Posts = () => {
           </div>
         </div>
       )}
-
       {/* Edit Post Overlay */}
       {editPostOverlay && (
         <div className="postOverlay">
