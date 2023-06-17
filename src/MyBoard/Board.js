@@ -44,7 +44,7 @@ const Board = () => {
     
   }, [showOverlay]);
 
-  // ----- Create a new Board
+  // ---------- Create a new Board----------------
   const handleCreateBoard = () => {
     const newBoard = { name: newBoardName, color: newBoardColor, id: uuidv4() };
     if (!newBoardName) {
@@ -107,7 +107,9 @@ const Board = () => {
       <ToastContainer />
       <div className="container my-4">
         <h3 className="fw-bolder">My Boards</h3>
-        <div className="row">
+        <div className="row"
+        onMouseEnter={() => setHoveredBoardIndex(null)}
+        >
           {boards.length === 0 && (
             <div className="col-lg-3 col-sm-12 mx-3 d-flex my-5 fw-lighter">
               <strong> No boards to show</strong>
