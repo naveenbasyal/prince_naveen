@@ -56,20 +56,35 @@
 .options__model button:hover {
   background-color: #f5f5f5;
 }
-.dot{
-    
-    padding: 5px 11px;
-    border-radius: 50%;
+.dot {
+  padding: 5px 11px;
+  border-radius: 50%;
 }
-.dot:hover{
+.dot:hover {
   background: #ddd;
   color: var(--grey_color);
   transform: scale(1.1);
 }
-.dot:active{
+.dot:active {
   transform: translateY(2px);
 }
-.delete_board i{
-    font-size: 14px;
-    
+.delete_board i {
+  font-size: 14px;
+}
+
+/* Responsive Ness */
+
+@media screen and (max-width: 498px) {
+  .myboard h3 {
+    display: grid;
+    place-items: center ;
+  }
+  .myboard .row {
+    display: grid;
+    place-items: center;
+    margin: 2rem 0;
+  }
+  .overlay{
+    padding: 0 26px;
+  }
 }

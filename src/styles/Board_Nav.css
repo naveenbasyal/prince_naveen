@@ -8,7 +8,7 @@
   border-bottom: 1px solid #e6e6e6;
   box-sizing: border-box;
 }
-.board_nav_left{
+.board_nav_left {
   margin-left: 2.5rem;
 }
 .board_nav .search_input {
@@ -83,4 +83,31 @@
   font-family: "Avenir Next";
   cursor: pointer;
   padding: 5px 14px;
+}
+
+/* Responsive Ness */
+
+@media screen and (max-width: 498px) {
+  .board_nav {
+    padding: 40px 10px !important;
+  }
+  .board_nav_left_title {
+    display: none;
+  }
+  .board_nav_left_img img{
+    width: 50px;
+    height: 50px;
+
+  }
+  .board_nav_left{
+    margin-left: 3px;
+  }
+  .board_nav_right{
+    /* flex-direction: column;    */
+    padding: 2px 2px;
+  }
+  .board_nav__search{
+    padding: 0;
+    margin: 5px 1px;
+  }
 }

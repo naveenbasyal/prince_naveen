@@ -4,7 +4,7 @@ import { BoardContext } from "../Context/BoardProvider";
 
 const Board_Nav = ({ handleCreateBoardClick }) => {
   const { setSearchQuery, searchQuery } = useContext(BoardContext);
-
+  const sw = window.screen.width;
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -38,7 +38,8 @@ const Board_Nav = ({ handleCreateBoardClick }) => {
             className="create_board__btn d-flex align-items-center py-3"
             onClick={handleCreateBoardClick}
           >
-            <i className="fa-solid fa-plus me-1"></i> Create new board
+            <i className="fa-solid fa-plus me-1"></i>
+            {sw > 500 ? "Create new board" : ""}
           </button>
         </div>
       </div>

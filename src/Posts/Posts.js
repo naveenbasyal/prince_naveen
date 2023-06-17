@@ -11,7 +11,7 @@ const Posts = () => {
   const { boards } = useContext(BoardContext);
   const { boardId } = useParams();
   const inputRef = useRef(null);
-
+  const sw = window.screen.width;
   // Actual array of posts
   const [posts, setPosts] = useState(
     JSON.parse(localStorage.getItem("posts")) || []
@@ -106,11 +106,15 @@ const Posts = () => {
 
   // Drag and drop functionality
   const handleDragEnd = (result) => {
-    console.log(result);
+    console.log("result->",result);
+    if (!result.destination) return;
     const items = Array.from(posts);
-    const [reorderedItems] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItems);
+    console.log("posts->",posts);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    console.log("reorder_item--->",reorderedItem);
+    items.splice(result.destination.index, 0, reorderedItem);
     setPosts(items);
+    console.log("items->",items)
     localStorage.setItem("posts", JSON.stringify(items));
   };
 
@@ -165,11 +169,13 @@ const Posts = () => {
     const file = e.target.files[0];
 
     const reader = new FileReader();
-    reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setNewPost({ ...newPost, img: reader.result });
+      const base64Image = reader.result;
+      setNewPost({ ...newPost, img: base64Image });
+      const updatedPosts = [...posts, { ...newPost, img: base64Image }];
+      localStorage.setItem("posts", JSON.stringify(updatedPosts));
     };
-    localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -213,8 +219,8 @@ const Posts = () => {
           <div className="fw-bold fs-4 pt-2 ">Your posts</div>
           <div className="post_create_btn">
             <button onClick={handleCreatePostClick}>
-              {" "}
-              <i className="fa-solid fa-plus me-2"></i>Create new post
+              <i className="fa-solid fa-plus me-2"></i>
+              {sw > 500 ? "Create new post" : ""}
             </button>
           </div>
         </div>
@@ -232,7 +238,7 @@ const Posts = () => {
           ) : (
             <Droppable droppableId="posts">
               {(provided) => (
-                <div
+                <ul
                   className="posts row"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
@@ -244,7 +250,7 @@ const Posts = () => {
                       index={index}
                     >
                       {(provided) => (
-                        <div
+                        <li
                           key={post.postId}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -316,6 +322,7 @@ const Posts = () => {
                               <div className="post_body_content">
                                 <p>{post.content}</p>
                               </div>
+                              <hr />
                             </div>
                             <div className="post_footer">
                               <div className="post_footer_left">
@@ -323,7 +330,7 @@ const Posts = () => {
                                   title={`${
                                     post.like ? "Unlike Post" : "Like Post"
                                   }`}
-                                  className={`fa-heart me-2 ${
+                                  className={`pointer   fa-heart me-2 ${
                                     post.like ? "fas text-danger" : "far"
                                   }`}
                                   onClick={() => {
@@ -337,12 +344,12 @@ const Posts = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </li>
                       )}
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                </div>
+                </ul>
               )}
             </Droppable>
           )}

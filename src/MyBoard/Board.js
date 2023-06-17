@@ -105,7 +105,7 @@ const Board = () => {
     <>
       <Board_Nav handleCreateBoardClick={handleCreateBoardClick} />
       <ToastContainer />
-      <div className="container my-4">
+      <div className="container myboard my-4">
         <h3 className="fw-bolder">My Boards</h3>
         <div className="row"
         onMouseEnter={() => setHoveredBoardIndex(null)}
