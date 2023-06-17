@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Amaranth:wght@700&family=Mulish&family=Rubik:wght@800&display=swap');
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Avenir Next";
+  font-family: 'Mulish', sans-serif;
 }
 :root {
   --grey_color: #717171;

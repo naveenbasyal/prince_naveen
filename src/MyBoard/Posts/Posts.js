@@ -24,6 +24,8 @@ const Posts = () => {
     setEditPost,
     bookMarkPosts,
     setBookMarkPosts,
+    likedPosts,
+    setLikedPosts,
   } = useContext(BoardContext);
 
   // Getting the boardId from the url
@@ -32,14 +34,21 @@ const Posts = () => {
   const sw = window.screen.width;
 
   const [showBookMarkPosts, setShowBookMarkPosts] = useState(false);
+  const [showLikedPosts, setShowLikedPosts] = useState(false);
+
   // Search functionality
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredPosts = posts.filter((item) => {
-    return (
-      item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
+  const filteredPosts = showLikedPosts
+    ? likedPosts
+    : showBookMarkPosts
+    ? bookMarkPosts
+    : posts.filter((item) => {
+        return (
+          item.title &&
+          item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      });
   const selectedBoard = boards.find((board) => board.id === boardId);
 
   const { name, color } = selectedBoard; // destructuring the selected board
@@ -185,8 +194,11 @@ const Posts = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64Image = reader.result;
-      // console.log(base64Image);
+      console.log(base64Image);
+      console.log(base64Image.length);
       setNewPost({ ...newPost, img: base64Image });
+
+      if (base64Image.length > 1000000) return;
 
       const updatedPosts = [...posts, { ...newPost, img: relativePath }];
       console.log("udated", updatedPosts);
@@ -227,20 +239,30 @@ const Posts = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>{" "}
+          <i
+            title="Show Liked posts"
+            className={`fa-heart me-2 ${showLikedPosts ? `fas red` : "far"}`}
+            onClick={() => {
+              setShowLikedPosts(!showLikedPosts);
+              setShowBookMarkPosts(false);
+              setLikedPosts(posts.filter((post) => post.like === true));
+            }}
+          ></i>
           |
           <i
-            title="Bookmark posts"
+            title="Show Bookmark posts"
             className={`fa-bookmark me-2 ${
               showBookMarkPosts ? `fas red` : "far"
             }`}
             onClick={() => {
-             setShowBookMarkPosts(!showBookMarkPosts);
-             setBookMarkPosts(posts.filter((post) => post.bookmark === true));
+              setShowLikedPosts(false);
+              setShowBookMarkPosts(!showBookMarkPosts);
+              setBookMarkPosts(posts.filter((post) => post.bookmark === true));
             }}
           ></i>
         </div>
       </div>
-      {console.log("Bookamrk", bookMarkPosts)};
+
       <div className="main_post_area" style={{ background: `${color}` }}>
         <div className="post_header  d-flex ">
           <div className="fw-bold fs-4 pt-2 ">Your posts</div>
@@ -425,7 +447,7 @@ const Posts = () => {
                 <div className="text-success mx-2 fw-bold">
                   <i className="fa-solid fa-image me-2"></i>
                   Image added succesfully{" "}
-                  <i class="fas fa-octagon fa-beat fa-sm"></i>
+                  <i className="fas fa-octagon fa-beat fa-sm"></i>
                 </div>
               ) : (
                 <label htmlFor="postImage" className="u-f-b">
