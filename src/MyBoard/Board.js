@@ -41,7 +41,6 @@ const Board = () => {
       inputRef.current.focus();
     }
     document.title = "Digital Wall | Boards";
-    
   }, [showOverlay]);
 
   // ---------- Create a new Board----------------
@@ -107,12 +106,16 @@ const Board = () => {
       <ToastContainer />
       <div className="container myboard my-4">
         <h3 className="fw-bolder">My Boards</h3>
-        <div className="row"
-        onMouseEnter={() => setHoveredBoardIndex(null)}
-        >
+        <div className="row" onMouseEnter={() => setHoveredBoardIndex(null)}>
           {boards.length === 0 && (
-            <div className="col-lg-3 col-sm-12 mx-3 d-flex my-5 fw-lighter">
-              <strong> No boards to show</strong>
+            <div className="center mt-5">
+              <div className="img-fluid mt-5">
+                <img src="/images/NoPostMobile.png" alt="No post image " />
+              </div>
+              <strong className="fs-5"> No Boards to show</strong>
+              <p className="grey">
+                create your 'Board' by clicking on the '+' button above
+              </p>
             </div>
           )}
           {searchFilteredBoards.map((board, id) => (
@@ -144,7 +147,7 @@ const Board = () => {
                     <button
                       onClick={() => {
                         setEditBoard(board);
-                        console.log(editBoard);
+
                         setEditOverlay(true);
                       }}
                       className="edit_board d-flex align-items-center"

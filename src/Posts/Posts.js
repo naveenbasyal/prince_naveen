@@ -3,45 +3,46 @@ import { useParams } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "../styles/posts.css";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 
 const Posts = () => {
-  const { boards } = useContext(BoardContext);
+  const {
+    boards,
+    posts,
+    setPosts,
+    newPost,
+    setNewPost,
+    hoverPostIndex,
+    setHoverPostIndex,
+    postOverlay,
+    setPostOverlay,
+    editPostOverlay,
+    setEditPostOverlay,
+    editPost,
+    setEditPost,
+  } = useContext(BoardContext);
+
+  // Getting the boardId from the url
   const { boardId } = useParams();
   const inputRef = useRef(null);
   const sw = window.screen.width;
-  // Actual array of posts
-  const [posts, setPosts] = useState(
-    JSON.parse(localStorage.getItem("posts")) || []
-  );
-  const [newPost, setNewPost] = useState({
-    img: "",
-    title: "",
-    content: "",
-  });
+
   // Search functionality
   const [searchQuery, setSearchQuery] = useState("");
+
   const filteredPosts = posts.filter((item) => {
     return (
       item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
+  const selectedBoard = boards.find((board) => board.id === boardId);
 
-  const [hoverPostIndex, setHoverPostIndex] = useState(null);
-
+  const { name, color } = selectedBoard; // destructuring the selected board
   useEffect(() => {
     document.title = name;
   }, []);
-
-  // Overlays for new post and edit post
-  const [postOverlay, setPostOverlay] = useState(false);
-  const [editPostOverlay, setEditPostOverlay] = useState(false);
-  const [editPost, setEditPost] = useState({ img: "", title: "", content: "" });
-
-  const selectedBoard = boards.find((board) => board.id === boardId);
-  const { name, color } = selectedBoard;
 
   useEffect(() => {
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -49,13 +50,24 @@ const Posts = () => {
     setPosts(filteredPosts);
   }, [boardId]);
 
-  // Create post button
+  // ------- Create post button --------
   const handleCreatePostClick = () => {
     setPostOverlay(true);
   };
 
-  // --------- create a new post --------
+  // --------- Create a new post --------
   const handleCreatePost = () => {
+    if (!newPost.title || !newPost.content) {
+      toast.error("Please fill all the fields", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        // theme: "colored",
+      });
+      return;
+    }
+
     const createdPost = { ...newPost, boardId, postId: uuidv4() };
     setPosts([...posts, createdPost]);
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -68,7 +80,7 @@ const Posts = () => {
     setPostOverlay(false);
   };
 
-  // Edit a post
+  // --------- Edit a post --------------
   const handleEditPost = (id) => {
     setPosts(
       posts.map((post) => {
@@ -92,7 +104,7 @@ const Posts = () => {
     setEditPostOverlay(false);
   };
 
-  // -------------- Delete your post----------------
+  // -------- Delete your post ------------
   const deletePost = (id) => {
     const updatedPosts = posts.filter((post) => post.postId !== id);
     setPosts(updatedPosts);
@@ -104,21 +116,17 @@ const Posts = () => {
     localStorage.setItem("posts", JSON.stringify(filteredPosts));
   };
 
-  // Drag and drop functionality
+  // -------- Drag and drop functionality ---------
   const handleDragEnd = (result) => {
-    console.log("result->",result);
     if (!result.destination) return;
     const items = Array.from(posts);
-    console.log("posts->",posts);
     const [reorderedItem] = items.splice(result.source.index, 1);
-    console.log("reorder_item--->",reorderedItem);
     items.splice(result.destination.index, 0, reorderedItem);
     setPosts(items);
-    console.log("items->",items)
     localStorage.setItem("posts", JSON.stringify(items));
   };
 
-  // like post
+  // ------------ Like post ------------
   const handleLikePost = (id) => {
     setPosts(
       posts.map((post) => {
@@ -128,7 +136,6 @@ const Posts = () => {
         return post;
       })
     );
-    console.log(posts);
     localStorage.setItem(
       "posts",
       JSON.stringify(
@@ -141,7 +148,7 @@ const Posts = () => {
       )
     );
   };
-  // ----Bookmark Post----
+  // ----------- Bookmark Post ------------
   const handleBookMarkPost = (id) => {
     setPosts(
       posts.map((post) => {
@@ -151,7 +158,7 @@ const Posts = () => {
         return post;
       })
     );
-    console.log(posts);
+
     localStorage.setItem(
       "posts",
       JSON.stringify(
@@ -165,14 +172,22 @@ const Posts = () => {
     );
   };
 
+  // ---------------Add Image ------------
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    const imageUrl = URL.createObjectURL(file);
 
+    // Obtain the relative path from the imageUrl
+    const relativePath = imageUrl.replace(window.location.origin, "");
+    console.log("realtive", relativePath);
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64Image = reader.result;
+      // console.log(base64Image);
       setNewPost({ ...newPost, img: base64Image });
-      const updatedPosts = [...posts, { ...newPost, img: base64Image }];
+
+      const updatedPosts = [...posts, { ...newPost, img: relativePath }];
+      console.log("udated", updatedPosts);
       localStorage.setItem("posts", JSON.stringify(updatedPosts));
     };
     reader.readAsDataURL(file);
@@ -291,7 +306,7 @@ const Posts = () => {
                                     <button
                                       onClick={() => {
                                         setEditPost({ ...post });
-                                        // console.log(editPost);
+
                                         setEditPostOverlay(true);
                                       }}
                                       className="edit_board d-flex align-items-center"
@@ -314,7 +329,7 @@ const Posts = () => {
                             <div className="post_header_img img-fluid">
                               <img
                                 // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTspvZboedMPZ9SHmJOM-0s1pxv1vT7HN5iMaHeNms&s"
-                                src={post.img || `https://shorturl.at/botyD`}
+                                src={post.img}
                                 alt=""
                               />
                             </div>
@@ -330,16 +345,16 @@ const Posts = () => {
                                   title={`${
                                     post.like ? "Unlike Post" : "Like Post"
                                   }`}
-                                  className={`pointer   fa-heart me-2 ${
+                                  className={`pointer fa-heart mx-2 ${
                                     post.like ? "fas text-danger" : "far"
                                   }`}
                                   onClick={() => {
                                     handleLikePost(post.postId);
                                   }}
                                 ></i>
-                                <span className="like_count">
+                                {/* <span className="like_count">
                                   {post.like ? 1 : 0}
-                                </span>
+                                </span> */}
                                 <i className="fa-solid fa-share mx-3"></i>
                               </div>
                             </div>
@@ -368,7 +383,10 @@ const Posts = () => {
                 </div>
                 <i
                   className="fa-solid fa-times"
-                  onClick={() => setPostOverlay(false)}
+                  onClick={() => {
+                    setPostOverlay(false);
+                    newPost.img && setNewPost({ ...newPost, img: "" });
+                  }}
                 ></i>
               </div>
             </div>
@@ -390,20 +408,27 @@ const Posts = () => {
             </div>
             {/* post Image */}
             <div className="post_image">
-              <label htmlFor="postImage" className="u-f-b">
-                <i className="fa-solid fa-image me-2"></i>
-                Add your image
-                <input
-                  type="file"
-                  name="postImage"
-                  id="postImage"
-                  onChange={handleImageChange}
-                />
-              </label>
+              {newPost.img ? (
+                <div className="text-success mx-2 fw-bold">
+                  <i className="fa-solid fa-image me-2"></i>
+                  Image added succesfully{" "}
+                  <i class="fas fa-octagon fa-beat fa-sm"></i>
+                </div>
+              ) : (
+                <label htmlFor="postImage" className="u-f-b">
+                  Add your Image
+                  <input
+                    type="file"
+                    name="postImage"
+                    id="postImage"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              )}
             </div>
             {/* post content */}
             <div className="post_content">
-              <div className="mt-5 fw-bold mb-3">What's on your mind?</div>
+              <div className="mt-4 fw-bold mb-3">What's on your mind?</div>
               <textarea
                 name="postContent"
                 value={newPost.content}

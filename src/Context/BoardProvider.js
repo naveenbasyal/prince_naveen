@@ -27,7 +27,27 @@ const BoardProvider = ({ children }) => {
     );
   });
 
+  // --------------------POST AREA --------------------
+
+   // Actual array of posts
+   const [posts, setPosts] = useState(
+    JSON.parse(localStorage.getItem("posts")) || []
+  );
+  const [newPost, setNewPost] = useState({
+    img: "",
+    title: "",
+    content: "",
+  });
+
   
+
+  const [hoverPostIndex, setHoverPostIndex] = useState(null);
+
+  // Overlays for new post and edit post
+  const [postOverlay, setPostOverlay] = useState(false);
+  const [editPostOverlay, setEditPostOverlay] = useState(false);
+  const [editPost, setEditPost] = useState({ img: "", title: "", content: "" });
+
 
   return (
     <BoardContext.Provider
@@ -47,6 +67,19 @@ const BoardProvider = ({ children }) => {
         searchFilteredBoards, 
         searchQuery, 
         setSearchQuery, 
+        posts,
+        setPosts,
+        newPost,
+        setNewPost,
+        hoverPostIndex,
+        setHoverPostIndex,
+        postOverlay,
+        setPostOverlay,
+        editPostOverlay,
+        setEditPostOverlay,
+        editPost,
+        setEditPost,
+          
       }}
     >
       {children}

@@ -243,56 +243,61 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.main_post_area li {
+  box-shadow: 8px 13px 6px rgba(0, 0, 0, 0.1);
+}
 
 /* Responsive Ness */
 
 @media screen and (max-width: 498px) {
-  .post_nav{
+  .post_nav {
     padding: 18px 0 5px 0;
     flex-direction: column;
   }
-  .post_nav .fa-arrow-left{
+  .post_nav .fa-arrow-left {
     margin: 0 10px;
   }
-  .post_nav_left{
+  .post_nav_left {
     width: 100%;
-    margin: 5px 0 0 0 ;
+    margin: 5px 0 0 0;
   }
   .post_nav_left .board_name {
     /* width: 100%; */
     margin-left: 20px;
-    
   }
 
-  .post_nav_left .post_nav_left_img img{
+  .post_nav_left .post_nav_left_img img {
     margin: 0 10px 0 0px;
   }
-  .post_nav_right{
+  .post_nav_right {
     width: 100%;
-    margin: 5px 0 0 0 ;
+    margin: 5px 0 0 0;
     justify-content: center;
   }
-  .post_nav_right .fa-bookmark{
+  .post_nav_right .fa-bookmark {
     cursor: pointer;
     font-size: 17px;
   }
-  .post_nav_right .board_nav__search{
+  .post_nav_right .board_nav__search {
     margin: 5px 10px;
   }
-  .main_post_area{
+  .main_post_area {
     padding: 20px 10px;
   }
-  .post_header{
+  .post_header {
     align-items: center;
     justify-content: center;
   }
-  .post_create_btn button{
+  .post_create_btn button {
     right: 10px;
   }
-  .postOverlay{
+  .postOverlay {
     padding: 0 26px;
   }
-  .main_post_area ul{
+  .main_post_area ul {
     padding: 0 10px;
+  }
+  .main_post_area li {
+    box-shadow: 8px 13px 6px rgba(0, 0, 0, 0.1);
   }
 }
