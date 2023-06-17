@@ -132,7 +132,7 @@ const Board = () => {
     <>
       <Board_Nav handleCreateBoardClick={handleCreateBoardClick} />
       <ToastContainer />
-      <div className="container myboard my-4">
+      <div className="container-md myboard my-4">
         <h3 className="fw-bolder">My Boards</h3>
         <div className="row" onMouseEnter={() => setHoveredBoardIndex(null)}>
           {boards.length === 0 && (
@@ -149,7 +149,7 @@ const Board = () => {
           {searchFilteredBoards.map((board, id) => (
             <div
               key={id}
-              className="board col-lg-3 col-sm-12 mx-3 d-flex my-5 position-relative"
+              className="board col-lg-3 col-sm-12 mx-2 d-flex my-5 position-relative"
             >
               <div
                 className="board__color "

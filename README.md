@@ -6,13 +6,14 @@ This project is live on <br/>
 
 ## Features
 
-○ Users can Re-Arrange posts by drag and drop inside the board<br/>
-○ The user can be able to bookmark posts<br/>
-○ Wall where users can create, update and delete boards<br/>
+○ Users can Re-Arrange posts by <b> drag and drop </b>inside the board<br/>
+○ The user can be able to <b>bookmark posts</b><br/>
+○ Wall where users can c<b>reate, update and delete</b> boards<br/>
 ○ On the board, users can create, update, and delete posts<br/>
-○ Users can able to like posts<br/>
-○ Users can be able to search boards by title in the wall<br/>
-○ Users can be able to search posts by title on the particular board<br/>
+○ Users can able to <b>like posts</b><br/>
+○ Users can be able to <b>search boards</b> by title in the wall<br/>
+○ Users can be able to <b>search posts</b> by title on the particular board<br/>
+○ Users can use this in <b>Mobile App</b> Also<br/>
 
 ## Digital Wall
 

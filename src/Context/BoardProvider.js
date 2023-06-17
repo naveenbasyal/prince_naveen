@@ -14,6 +14,8 @@ const BoardProvider = ({ children }) => {
     "#dbdbff",
     "#ffc9d5",
     "#ffe3ac",
+    "#68d388",
+    "#f8efed"
   ]);
 
   const [selectedBoardIndex, setSelectedBoardIndex] = useState(null);

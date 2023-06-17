@@ -201,7 +201,7 @@ const Posts = () => {
       if (base64Image.length > 1000000) return;
 
       const updatedPosts = [...posts, { ...newPost, img: relativePath }];
-      console.log("udated", updatedPosts);
+      // console.log("udated", updatedPosts);
       localStorage.setItem("posts", JSON.stringify(updatedPosts));
     };
     reader.readAsDataURL(file);
@@ -277,7 +277,7 @@ const Posts = () => {
 
       <div className="main_post_area" style={{ background: `${color}` }}>
         <div className="post_header  d-flex ">
-          <div className="fw-bold fs-4 pt-2 ">Your posts</div>
+          <div className="fw-bold fs-4 pt-2  mx-5">Your posts</div>
           <div className="post_create_btn">
             <button onClick={handleCreatePostClick}>
               <i className="fa-solid fa-plus me-2"></i>

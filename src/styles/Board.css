@@ -28,7 +28,7 @@
   color: rgb(126, 123, 123);
   /* text-transform: uppercase; */
   letter-spacing: 1px;
-  margin-left: 10px;
+  
 }
 /* editting */
 .options__model {
@@ -70,6 +70,15 @@
 }
 .delete_board i {
   font-size: 14px;
+}
+
+.myboard .row{
+  /* justify-content: space; */
+}
+.myboard h3 {
+  display: grid;
+  margin: auto 4%;
+  font-weight: 800;
 }
 
 /* Responsive Ness */
