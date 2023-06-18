@@ -24,7 +24,7 @@
 }
 .board .board__title {
   font-size: 15px;
-
+  width: 100%;
   color: rgb(126, 123, 123);
   /* text-transform: uppercase; */
   letter-spacing: 1px;

@@ -245,6 +245,7 @@
 }
 .main_post_area li {
   box-shadow: 8px 13px 6px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
 /* Responsive Ness */
