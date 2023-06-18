@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Board_Nav from "../components/Board_Nav";
 import "../styles/Board.css";
 import "../styles/overlay.css";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { BoardContext } from "../Context/BoardProvider";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
@@ -41,11 +41,8 @@ const Board = () => {
       inputRef.current.focus();
     }
     document.title = "Digital Wall | Boards";
-    // Check if the info message has been shown before
     const infoMessageShown = localStorage.getItem("infoMessageShown");
-
     if (!infoMessageShown) {
-      // Show the info message
       toast.info(
         "Welcome to the app! This app contains all the features mentioned to do.",
         {
@@ -58,7 +55,7 @@ const Board = () => {
         }
       );
 
-      // Store the flag indicating that the info message has been shown
+      
       localStorage.setItem("infoMessageShown", "true");
     }
   }, [showOverlay]);

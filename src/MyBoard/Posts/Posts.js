@@ -6,6 +6,8 @@ import "../../styles/posts.css";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ClipLoader } from "react-spinners";
 const Posts = () => {
   const {
     boards,
@@ -37,7 +39,9 @@ const Posts = () => {
 
   // Search functionality
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  //filtering the posts according to the search query or liked or bookmarked posts
   const filteredPosts = showLikedPosts
     ? likedPosts
     : showBookMarkPosts
@@ -50,7 +54,7 @@ const Posts = () => {
       });
   const selectedBoard = boards.find((board) => board.id === boardId);
 
-  const { name, color } = selectedBoard; // destructuring the selected board
+  const { name, color } = selectedBoard; 
   useEffect(() => {
     document.title = name;
   }, []);
@@ -92,41 +96,55 @@ const Posts = () => {
 
   // --------- Edit a post --------------
   const handleEditPost = (id) => {
+    if (!editPost.title || !editPost.content) {
+      toast.error("Please fill all the fields", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+      });
+      return;
+    }
+
     setPosts(
       posts.map((post) => {
         if (post.postId === id) {
-          return { ...post, ...editPost };
+          return { ...post, title: editPost.title, content: editPost.content };
         }
         return post;
       })
     );
+
     localStorage.setItem(
       "posts",
       JSON.stringify(
         posts.map((post) => {
           if (post.postId === id) {
-            return { ...post, ...editPost };
+            return {
+              ...post,
+              title: editPost.title,
+              content: editPost.content,
+            };
           }
           return post;
         })
       )
     );
+
     setEditPostOverlay(false);
   };
 
   // -------- Delete your post ------------
   const deletePost = (id) => {
-
     const updatedPosts = posts.filter((post) => post.postId !== id);
-    setPosts(updatedPosts); 
+    setPosts(updatedPosts);
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
     const filteredPosts = dbPosts.filter((post) => {
       return post.postId !== id;
     });
-  
-    localStorage.setItem("posts", JSON.stringify(filteredPosts)); 
+
+    localStorage.setItem("posts", JSON.stringify(filteredPosts));
   };
-  
 
   // -------- Drag and drop functionality ---------
   const handleDragEnd = (result) => {
@@ -160,11 +178,7 @@ const Posts = () => {
       )
     );
   };
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
-
+  // -------- Bookmark  the post ------------
   const handleBookMarkPost = (id) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) => {
@@ -174,7 +188,7 @@ const Posts = () => {
         return post;
       })
     );
-  
+
     localStorage.setItem(
       "posts",
       JSON.stringify(
@@ -187,55 +201,74 @@ const Posts = () => {
       )
     );
   };
-
-
-  const uploadImage = async(file)=>{
+  // ------ upload image -----
+  const uploadImage = async (file) => {
     const formData = new FormData();
-    formData.append('file',file);
-    formData.append('upload_preset','digitalwall');
-    formData.append('cloud_name','dtmwcbui1');
-      setLoading(true);
-    const res = await fetch('https://api.cloudinary.com/v1_1/dtmwcbui1/image/upload',{
-      method:'POST',
-      body:formData
-    })
-      
+    formData.append("file", file);
+    formData.append("upload_preset", "digitalwall");
+    formData.append("cloud_name", "dtmwcbui1");
+    setLoading(true);
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dtmwcbui1/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    setLoading(false);
     const data = await res.json();
-    console.log(data);
+
     return data.url;
-    
-  }
+  };
   // ---------------Add Image ------------
-  const handleImageChange = async(e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (!file) toast.error("Please select an image", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-    });
-    if (file.type !== "image/jpeg" && file.type !== "image/png") {
-      return toast.error("Format is not supported", {
+    if (!file) {
+      toast.error("Please select an image", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
-      })
+      });
+      return;
+    }
+    if (file.type !== "image/jpeg" && file.type !== "image/png") {
+      toast.error("Format is not supported", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+      });
+      return;
     }
     if (file.size > 5000000) {
-      return toast.error("Size must be less than 5MB", {
+      toast.error("Size must be less than 5MB", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
-      })
-
+      });
+      return;
     }
-    
-    const imageUrl = await uploadImage(file);
-    setNewPost({ ...newPost, img: imageUrl });
 
-    
+    try {
+      setLoading(true);
+      const imageUrl = await uploadImage(file);
+      setNewPost((prevPost) => ({
+        ...prevPost,
+        img: imageUrl,
+      }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Error uploading image", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -320,6 +353,7 @@ const Posts = () => {
           {posts.length === 0 ? (
             <div className="center mt-5">
               <div className="img-fluid mt-5">
+                {}
                 <img src="/images/NoPostMobile.png" alt="No post image " />
               </div>
               <strong> Nothing here yet</strong>
@@ -484,7 +518,16 @@ const Posts = () => {
             </div>
             {/* post Image */}
             <div className="post_image">
-              {newPost.img ? (
+              {loading ? (
+                <div className="d-flex align-items-center ">
+                  <ClipLoader color="#000" size={20} className="mx-2" />
+                  uploading image ...
+                  <i
+                    title="it may take time if you have slow internet connection"
+                    className="fas fa-info-circle info"
+                  ></i>
+                </div>
+              ) : newPost.img ? (
                 <div className="text-success mx-2 fw-bold">
                   <i className="fa-solid fa-image me-2"></i>
                   Image added succesfully{" "}
@@ -492,9 +535,11 @@ const Posts = () => {
                 </div>
               ) : (
                 <label htmlFor="postImage" className="u-f-b">
+                  <i className="fas fa-image me-2"></i>
                   Add your Image
                   <input
-                    type="file"
+                    accept="image/*"
+                     type="file"
                     name="postImage"
                     id="postImage"
                     onChange={handleImageChange}

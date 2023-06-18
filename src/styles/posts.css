@@ -243,6 +243,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.info{
+  margin: 0 4px;
+  color: var(--grey_color);
+  cursor: pointer;
+}
 .main_post_area li {
   box-shadow: 8px 13px 6px rgba(0, 0, 0, 0.1);
   height: 100%;
