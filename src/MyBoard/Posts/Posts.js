@@ -37,7 +37,7 @@ const Posts = () => {
 
   // Search functionality
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [loading , setLoading] = useState(false);
   const filteredPosts = showLikedPosts
     ? likedPosts
     : showBookMarkPosts
@@ -116,6 +116,7 @@ const Posts = () => {
 
   // -------- Delete your post ------------
   const deletePost = (id) => {
+
     const updatedPosts = posts.filter((post) => post.postId !== id);
     setPosts(updatedPosts); 
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -186,31 +187,55 @@ const Posts = () => {
       )
     );
   };
-  
 
+
+  const uploadImage = async(file)=>{
+    const formData = new FormData();
+    formData.append('file',file);
+    formData.append('upload_preset','digitalwall');
+    formData.append('cloud_name','dtmwcbui1');
+      setLoading(true);
+    const res = await fetch('https://api.cloudinary.com/v1_1/dtmwcbui1/image/upload',{
+      method:'POST',
+      body:formData
+    })
+      
+    const data = await res.json();
+    console.log(data);
+    return data.url;
+    
+  }
   // ---------------Add Image ------------
-  const handleImageChange = (e) => {
+  const handleImageChange = async(e) => {
     const file = e.target.files[0];
-    const imageUrl = URL.createObjectURL(file);
-    console.log(file);
-    // Obtain the relative path from the imageUrl
-    const relativePath = imageUrl.replace(window.location.origin, "");
-    console.log("realtive", relativePath);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64Image = reader.result;
-      console.log(base64Image);
-      console.log(base64Image.length);
-      setNewPost({ ...newPost, img: base64Image });
+    if (!file) toast.error("Please select an image", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+    });
+    if (file.type !== "image/jpeg" && file.type !== "image/png") {
+      return toast.error("Format is not supported", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+      })
+    }
+    if (file.size > 5000000) {
+      return toast.error("Size must be less than 5MB", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+      })
 
-      if (base64Image.length > 1000000) return;
+    }
+    
+    const imageUrl = await uploadImage(file);
+    setNewPost({ ...newPost, img: imageUrl });
 
-      // const updatedPosts = [...posts, { ...newPost, img: relativePath, postId: uuidv4() }];
-      // const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
-      // // console.log("udated", updatedPosts);
-      // localStorage.setItem("posts", JSON.stringify([...dbPosts, ...updatedPosts]));
-    };
-    reader.readAsDataURL(file);
+    
   };
 
   return (
