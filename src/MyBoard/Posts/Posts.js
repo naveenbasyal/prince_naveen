@@ -117,14 +117,15 @@ const Posts = () => {
   // -------- Delete your post ------------
   const deletePost = (id) => {
     const updatedPosts = posts.filter((post) => post.postId !== id);
-    setPosts(updatedPosts);
+    setPosts(updatedPosts); 
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
     const filteredPosts = dbPosts.filter((post) => {
       return post.postId !== id;
     });
-
-    localStorage.setItem("posts", JSON.stringify(filteredPosts));
+  
+    localStorage.setItem("posts", JSON.stringify(filteredPosts)); 
   };
+  
 
   // -------- Drag and drop functionality ---------
   const handleDragEnd = (result) => {
@@ -136,16 +137,16 @@ const Posts = () => {
     localStorage.setItem("posts", JSON.stringify(items));
   };
 
-  // ------------ Like post ------------
   const handleLikePost = (id) => {
-    setPosts(
-      posts.map((post) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => {
         if (post.postId === id) {
           return { ...post, like: !post.like };
         }
         return post;
       })
     );
+
     localStorage.setItem(
       "posts",
       JSON.stringify(
@@ -158,17 +159,21 @@ const Posts = () => {
       )
     );
   };
-  // ----------- Bookmark Post ------------
+
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
+
   const handleBookMarkPost = (id) => {
-    setPosts(
-      posts.map((post) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => {
         if (post.postId === id) {
           return { ...post, bookmark: !post.bookmark };
         }
         return post;
       })
     );
-
+  
     localStorage.setItem(
       "posts",
       JSON.stringify(
@@ -181,12 +186,13 @@ const Posts = () => {
       )
     );
   };
+  
 
   // ---------------Add Image ------------
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
-
+    console.log(file);
     // Obtain the relative path from the imageUrl
     const relativePath = imageUrl.replace(window.location.origin, "");
     console.log("realtive", relativePath);
@@ -195,7 +201,7 @@ const Posts = () => {
       const base64Image = reader.result;
       console.log(base64Image);
       console.log(base64Image.length);
-      setNewPost({ ...newPost, img: base64Image, });
+      setNewPost({ ...newPost, img: base64Image });
 
       if (base64Image.length > 1000000) return;
 
@@ -243,12 +249,12 @@ const Posts = () => {
             title="Show Liked posts"
             className={`fa-heart me-2 ${showLikedPosts ? `fas red` : "far"}`}
             onClick={() => {
-              if(posts.length === 0) {
-                toast.error("No posts to show",{
+              if (posts.length === 0) {
+                toast.error("No posts to show", {
                   position: "top-center",
                 });
                 return;
-              };
+              }
               setShowLikedPosts(!showLikedPosts);
               setShowBookMarkPosts(false);
               setLikedPosts(posts.filter((post) => post.like === true));
@@ -261,8 +267,8 @@ const Posts = () => {
               showBookMarkPosts ? `fas red` : "far"
             }`}
             onClick={() => {
-              if(posts.length === 0) {
-                toast.error("No posts to show",{
+              if (posts.length === 0) {
+                toast.error("No posts to show", {
                   position: "top-center",
                 });
                 return;
@@ -400,9 +406,7 @@ const Posts = () => {
                                     handleLikePost(post.postId);
                                   }}
                                 ></i>
-                                {/* <span className="like_count">
-                                  {post.like ? 1 : 0}
-                                </span> */}
+
                                 <i className="fa-solid fa-share mx-3"></i>
                               </div>
                             </div>
