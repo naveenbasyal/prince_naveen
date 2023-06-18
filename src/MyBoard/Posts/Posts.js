@@ -78,7 +78,7 @@ const Posts = () => {
       return;
     }
 
-    const createdPost = { ...newPost, boardId };
+    const createdPost = { ...newPost, boardId, postId: uuidv4() };
     setPosts([...posts, createdPost]);
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
     localStorage.setItem("posts", JSON.stringify([...dbPosts, createdPost]));
