@@ -6,7 +6,6 @@ import "../../styles/posts.css";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
-
 const Posts = () => {
   const {
     boards,
@@ -79,7 +78,7 @@ const Posts = () => {
       return;
     }
 
-    const createdPost = { ...newPost, boardId, postId: uuidv4() };
+    const createdPost = { ...newPost, boardId };
     setPosts([...posts, createdPost]);
     const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
     localStorage.setItem("posts", JSON.stringify([...dbPosts, createdPost]));
@@ -196,13 +195,14 @@ const Posts = () => {
       const base64Image = reader.result;
       console.log(base64Image);
       console.log(base64Image.length);
-      setNewPost({ ...newPost, img: base64Image });
+      setNewPost({ ...newPost, img: base64Image, });
 
       if (base64Image.length > 1000000) return;
 
-      const updatedPosts = [...posts, { ...newPost, img: relativePath }];
-      // console.log("udated", updatedPosts);
-      localStorage.setItem("posts", JSON.stringify(updatedPosts));
+      // const updatedPosts = [...posts, { ...newPost, img: relativePath, postId: uuidv4() }];
+      // const dbPosts = JSON.parse(localStorage.getItem("posts")) || [];
+      // // console.log("udated", updatedPosts);
+      // localStorage.setItem("posts", JSON.stringify([...dbPosts, ...updatedPosts]));
     };
     reader.readAsDataURL(file);
   };
